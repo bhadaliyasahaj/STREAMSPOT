@@ -19,11 +19,11 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     subscribers: {
-        type: String,
+        type: Number,
         default: 0
     },
     subscribedUsers: {
-        type: [String],
+        type: [String]
     }  
 },{timestamps:true})
 
