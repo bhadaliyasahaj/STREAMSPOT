@@ -99,6 +99,7 @@ export const sub = async (req, res, next) => {
 }
 
 export const getByTag = async (req, res, next) => {
+    console.log(req.query.tags);
     const tags = req.query.tags.split(",")
     try {
         const videos = await Video.find({ tags: { $in: tags } }).limit(20)
