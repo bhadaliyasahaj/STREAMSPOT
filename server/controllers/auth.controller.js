@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import User from '../models/User.model.js'
 import bcrypt from 'bcrypt'
 import { createError } from '../error.js'
@@ -18,6 +17,7 @@ export const signup = async (req,res,next)=>{
 
 export const signin = async (req,res,next)=>{
     try{
+        console.log("working")
         const user = await User.findOne({name: req.body.name})
         if(!user) return next(createError(404,"User Not Found"))
         const isCorrect = await bcrypt.compare(req.body.password,user.password)
