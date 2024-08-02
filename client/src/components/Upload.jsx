@@ -74,7 +74,7 @@ const Label = styled.label`
 `
 
 
-function Upload({ setOpen }) {
+function Upload({ setOpen,userId }) {
   const [img, setImg] = useState(undefined)
   const [video, setVideo] = useState(undefined)
   const [imgPerc, setImgPerc] = useState(0)
@@ -91,13 +91,13 @@ function Upload({ setOpen }) {
   }
 
   const handleTags = (e) => {
-    setTags(e.target.value.split(","))
+    setTags(e.target.value.split("#"))
   }
 
   const uploadFile = (file, urlType) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
+    const storageRef = ref(storage, `/users/${userId}/${fileName}`);
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -153,7 +153,7 @@ function Upload({ setOpen }) {
         <Input type='text' placeholder='Separate the tags with hashtags' onChange={handleTags} />
         <Label>Image:</Label>
         {imgPerc>0 ? ("Uploading:" + Math.round(imgPerc) +"%") : (<Input type='file' accept='image/*' onChange={(e) => { setImg(e.target.files[0]) }} />)}
-        <Button onClick={handleUpload}>Upload</Button>
+        <Button onClick={handleUpload} disabled={(!inputs.videoUrl && !inputs.imgUrl)}>Upload</Button>
       </Wrapper>
     </Container>
   )

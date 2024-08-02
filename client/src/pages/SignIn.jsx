@@ -87,20 +87,35 @@ const SignIn = () => {
       dispatch(loginFailure());
     }
   }
+
+  const handleRegister = async (e)=>{
+    e.preventDefault();
+    try{
+      await axios.post("/auth/signup",{name,password,email}).then((res)=>{
+        console.log(res.data)
+        setEmail("")
+        setPassword("")
+        setName("")
+      } )
+    }catch(err){
+    }
+  }
   
   return (
     <Container>
       <Wrapper>
         <Title>Sign in</Title>
-        <SubTitle>to continue to VideoTube</SubTitle>
-        <Input placeholder="username" onChange={(e)=>setName(e.target.value)}/>
-        <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)}/>
+        <SubTitle>to continue with VideoTube</SubTitle>
+        <Input placeholder="username" value={name} onChange={(e)=>setName(e.target.value)}/>
+        <Input type="password" value={password} placeholder="password" onChange={(e)=>setPassword(e.target.value)}/>
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
-        <Input placeholder="username"  onChange={(e)=>setName(e.target.value)}/>
-        <Input placeholder="email" onChange={(e)=>setEmail(e.target.value)}/>
-        <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)}/>
-        <Button>Sign up</Button>
+        <Title>Sign Up</Title>
+        <SubTitle>to become member of VideoTube</SubTitle>
+        <Input placeholder="username" value={name} onChange={(e)=>setName(e.target.value)}/>
+        <Input placeholder="email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
+        <Input type="password" value={password} placeholder="password" onChange={(e)=>setPassword(e.target.value)}/>
+        <Button onClick={handleRegister}>Sign up</Button>
       </Wrapper>
       <More>
         English(USA)

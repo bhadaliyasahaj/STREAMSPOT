@@ -76,6 +76,16 @@ const Avatar = styled.img`
   background-color:#999;
   cursor: pointer;
 `
+
+const Cuser = styled.img`
+   width:32px;
+  height:32px;
+  border-radius:50%;
+  background-color:#999;
+  cursor: pointer;
+`
+
+
 const Name = styled.text`
   width:32px;
   cursor: pointer;
@@ -124,25 +134,30 @@ const Navbar = () => {
     navigate("/")
   };
 
+  const handleVideoButton = ()=>{
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setOpen(true)
+  }
+
   return (
     <>
       <Container>
         <Wrapper>
           <Search>
             <Input placeholder="Search" onChange={(e) => setQ(e.target.value)} />
-            <SearchOutlinedIcon onClick={() => { navigate(`/search/?q=${q}`) }} />
+            <SearchOutlinedIcon onClick={() => { navigate(`/search/?q=${q}`); }} />
           </Search>
           {currentUser ? (
             <User>
-              <VideoCallOutlinedIcon onClick={() => setOpen(true)} style={{ cursor: "pointer", fontSize: "35px" }} />
-              <Avatar onClick={handleAvatarClick} for="dropdown"/>
+              <VideoCallOutlinedIcon onClick={handleVideoButton} style={{ cursor: "pointer", fontSize: "35px" }} />
+              {currentUser.img ? (<Cuser src={currentUser.img} onClick={handleAvatarClick}/>) : <Avatar onClick={handleAvatarClick}/> }
               {dropdownOpen && (
               <Dropdown>
-                <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
+                <DropdownItem onClick={() => {navigate('/profile');setDropdownOpen(false);}}>Profile</DropdownItem>
                 <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
               </Dropdown>
             )}
-              <Name onClick={handleAvatarClick}>{currentUser.name}</Name>
+              <Name onClick={handleAvatarClick}>{(currentUser.name.split(" "))[0]}</Name>
             </User>
           ) : <Link to="signin" style={{ textDecoration: "none" }}>
             <Button>
@@ -153,7 +168,7 @@ const Navbar = () => {
           }
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen} />}
+      {open && <Upload setOpen={setOpen} userId={currentUser._id}/>}
     </>
   );
 };

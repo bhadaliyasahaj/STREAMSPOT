@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 export const signup = async (req,res,next)=>{
     try{
         const hashPass = await bcrypt.hash(req.body.password,10)
-        // console.log(hashPass)
         const newUser = new User({...req.body, password: hashPass})
         await newUser.save();
         res.status(200).send("User Has Been Created")
