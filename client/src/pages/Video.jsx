@@ -17,6 +17,8 @@ import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
 import { current } from "@reduxjs/toolkit";
 import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
+import Videoload from "../components/loadComponent/Videoload";
+
 
 const Container = styled.div`
   display: flex;
@@ -119,6 +121,8 @@ const VideoFrame = styled.video`
   object-fit:cover;
 `
 
+
+
 const Video = () => {
   const {currentUser} = useSelector(state=>state.user)
   const {currentVideo} = useSelector(state=>state.video)
@@ -129,6 +133,7 @@ const Video = () => {
   const [channel,setChannel] = useState({})
 
   useEffect(()=>{
+    dispach(fetchSuccess(null))
     const fetchData = async ()=>{
       try {
         const videoRes = await axios.get(`/videos/find/${path}`)
@@ -167,8 +172,8 @@ const Video = () => {
   }
 
   return (
-    // <h1>hello</h1>
-    <Container>
+    <>{(channel != {}) && currentUser && currentVideo ? 
+    (<Container>
       <Content>
         <VideoWrapper>
           <VideoFrame src={currentVideo.videoUrl} controls/>
@@ -209,7 +214,8 @@ const Video = () => {
         <Comments videoId={currentVideo._id}/>
       </Content>
       <Recommendation tags={currentVideo.tags}/>
-    </Container>
+    </Container>):(<Videoload/>)}
+    </>
   );
 };
 

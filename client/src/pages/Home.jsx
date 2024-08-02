@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 import axios from 'axios'
+import Videoload from '../components/loadComponent/Videoload.jsx'
 
 const Container = styled.div`
   display: flex;
@@ -24,11 +25,9 @@ const Home = ({type}) => {
 
   return (
     <Container>
-     {videos && (
-      videos.map((video)=>{
+     {      videos.map((video)=>{
         return(<Card key={video._id} video={video} />)
-      })
-     )     
+      }) 
      }
     </Container>
   );

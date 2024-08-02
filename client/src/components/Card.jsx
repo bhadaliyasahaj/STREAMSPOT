@@ -4,6 +4,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import {format} from 'timeago.js'
+import Videoload from "./loadComponent/Videoload";
+import Homeload from "./loadComponent/Homeload";
 
 const Container = styled.div`
   width: ${(props) => props.type !== "sm" && "360px"};
@@ -58,19 +60,22 @@ const Info = styled.div`
 
 const Card = ({ type ,video}) => {
   const [channel,setChannel] = useState({})
+  const [loading,setLoading] = useState(true)
 
   useEffect(()=>{
     const fetchChannel = async ()=>{
       await axios.get(`/users/find/${video.userId}`).then((res)=>{
         if(!res) return <h1>Data Not Exist</h1>
         setChannel(res.data)
+        setLoading(false)
       })
     }
     fetchChannel()
   },[video.userId])
 
   return (
-    <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
+    <> { (loading) ?(<Homeload />): ( 
+     <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
         <Image
           type={type}
@@ -86,6 +91,9 @@ const Card = ({ type ,video}) => {
         </Details>
       </Container>
     </Link>
+    ) } 
+    </>
+
   );
 };
 

@@ -94,3 +94,15 @@ export const dislike = async (req,res,next) =>{
         next(err)
     }
 }
+
+
+export const logout = (req,res,next)=>{
+    if(req.user.id === req.params.id){
+        res.clearCookie("access_token", {
+            httpOnly: true
+        }).status(200).json({ message: "Cookie cleared" });
+        
+    }else{
+        next(createError(404,"Cannot Logout"))
+    }
+}

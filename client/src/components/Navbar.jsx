@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOff";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined"
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Upload from './Upload'
+import axios from "axios";
+import { loginSuccess } from "../redux/userSlice";
 // import { Avatar } from "@mui/material";
 
 const Container = styled.div`
@@ -72,27 +74,75 @@ const Avatar = styled.img`
   height:32px;
   border-radius:50%;
   background-color:#999;
+  cursor: pointer;
 `
+const Name = styled.text`
+  width:32px;
+  cursor: pointer;
+`
+
+const Dropdown = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 5px;
+  background-color: ${({ theme }) => theme.bgLighter};
+  border: 1px solid ${({ theme }) => theme.soft};
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 10;
+`;
+
+const DropdownItem = styled.div`
+  padding: 10px 20px;
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
+`;
 
 const Navbar = () => {
   const navigate = useNavigate()
   const { currentUser } = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleAvatarClick = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = async () => {
+    // Implement logout logic here
+    await axios.post(`/users/logout/${currentUser._id}`).then((res)=>{
+      console.log(res.data);
+      dispatch(loginSuccess(null));
+    })
+    setDropdownOpen(false);
+    navigate("/")
+  };
 
   return (
     <>
       <Container>
         <Wrapper>
           <Search>
-            <Input placeholder="Search" onChange={(e)=>setQ(e.target.value)}/>
-            <SearchOutlinedIcon onClick={()=>{navigate(`/search/?q=${q}`)}}/>
+            <Input placeholder="Search" onChange={(e) => setQ(e.target.value)} />
+            <SearchOutlinedIcon onClick={() => { navigate(`/search/?q=${q}`) }} />
           </Search>
           {currentUser ? (
             <User>
-              <VideoCallOutlinedIcon onClick={() => setOpen(true)} style={{cursor:"pointer",fontSize:"35px"}}/>
-              <Avatar />
-              {currentUser.name}
+              <VideoCallOutlinedIcon onClick={() => setOpen(true)} style={{ cursor: "pointer", fontSize: "35px" }} />
+              <Avatar onClick={handleAvatarClick} for="dropdown"/>
+              {dropdownOpen && (
+              <Dropdown>
+                <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
+                <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+              </Dropdown>
+            )}
+              <Name onClick={handleAvatarClick}>{currentUser.name}</Name>
             </User>
           ) : <Link to="signin" style={{ textDecoration: "none" }}>
             <Button>
@@ -103,7 +153,7 @@ const Navbar = () => {
           }
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen}/>}
+      {open && <Upload setOpen={setOpen} />}
     </>
   );
 };
