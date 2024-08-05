@@ -91,7 +91,10 @@ function Upload({ setOpen,userId }) {
   }
 
   const handleTags = (e) => {
-    setTags(e.target.value.split("#"))
+    const tags = e.target.value.split("#")
+    tags.shift();
+    console.log(tags);
+    setTags(tags)
   }
 
   const uploadFile = (file, urlType) => {
@@ -153,7 +156,7 @@ function Upload({ setOpen,userId }) {
         <Input type='text' placeholder='Separate the tags with hashtags' onChange={handleTags} />
         <Label>Image:</Label>
         {imgPerc>0 ? ("Uploading:" + Math.round(imgPerc) +"%") : (<Input type='file' accept='image/*' onChange={(e) => { setImg(e.target.files[0]) }} />)}
-        <Button onClick={handleUpload} disabled={(!inputs.videoUrl && !inputs.imgUrl)}>Upload</Button>
+        <Button onClick={handleUpload} disabled={(!inputs.videoUrl || !inputs.imgUrl)}>Upload</Button>
       </Wrapper>
     </Container>
   )

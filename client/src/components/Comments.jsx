@@ -31,6 +31,10 @@ const Input = styled.input`
   width: 80%;
 `;
 
+const Notice = styled.h2`
+  color: ${({theme})=> theme.text};
+`
+
 const Comments = ({videoId}) => {
   const [comments,setComments] = useState([]);
   const {currentUser} = useSelector(state=>state.user)
@@ -69,11 +73,11 @@ const Comments = ({videoId}) => {
 
   return (
     <Container>
-      <NewComment>
+      {currentUser ? <NewComment>
         <Avatar src={currentUser.img} />
         <Input placeholder="Add a comment..." value={newcomm} onFocus={handleButton} onChange={(e)=>setNewComm(e.target.value)}/>
         {focus && <Button onClick={handlePostButton}>POST</Button>}
-      </NewComment>
+      </NewComment> : (<Notice>Sign In To Comment, Like And Subscribe</Notice>)}
       {(comments != [])? (
         comments.map((comment)=>(
           <Comment key={comment._id} comment={comment} onDelete={handleDeletedComment}/>

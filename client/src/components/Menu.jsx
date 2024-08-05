@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import LamaTube from "../img/logo.png";
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -18,33 +17,20 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
+import StreamSpot from "../img/logo.png";
 import { useSelector } from "react-redux";
+
 const Container = styled.div`
-  flex: 1;
+  flex: 1.1;
   background-color: ${({ theme }) => theme.bgLighter};
-  height: 100%;
+  /* height: 100%; */
   color: ${({ theme }) => theme.text};
   font-size: 14px;
   position: sticky;
   top: 0;
-  scroll:auto;
 `;
 const Wrapper = styled.div`
-  padding: 18px 26px;
-`;
-const Logo = styled.div`
-  position:sticky;
-  top:16px;
-  background-color: ${({ theme }) => theme.bgLighter};
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: bold;
-  margin-bottom: 25px;
-`;
-
-const Img = styled.img`
-  height: 25px;
+  padding: 0px 26px 15px 26px;
 `;
 
 const Item = styled.div`
@@ -86,16 +72,35 @@ const Title = styled.h2`
   margin-bottom: 20px;
 `;
 
+const Logo = styled.div`
+  position:sticky;
+  top:0px;
+  left:0;
+  height: 40px;
+  padding-top: 14px;
+  background-color: ${({ theme }) => theme.bgLighter};
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  /* border: 2px solid red; */
+`;
+
+const Img = styled.img`
+  height: 25px;
+`;
+
 const Menu = ({ darkMode, setDarkMode }) => {
   const {currentUser} = useSelector(state=>state.user) 
 
   return (
     <Container>
       <Wrapper>
-        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+      <Link to="/" style={{ textDecoration: "none", color: "inherit",backgroundColor:"black" }}>
           <Logo>
-            <Img src={LamaTube} />
-            VideoTube
+            <Img src={StreamSpot} />
+            StreamSpot
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
@@ -136,7 +141,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           </Link>
         </Login>
         <Hr /></>}
-        <Title>BEST OF VideoTube</Title>
+        <Title>BEST OF STREAMSPOT</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
           Music

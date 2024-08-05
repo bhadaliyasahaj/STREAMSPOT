@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Upload from './Upload'
 import axios from "axios";
 import { loginSuccess } from "../redux/userSlice";
+
 // import { Avatar } from "@mui/material";
 
 const Container = styled.div`
@@ -16,6 +17,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.bgLighter};
   height: 56px;
   z-index: 10;
+  width:100%;
 `;
 
 const Wrapper = styled.div`
@@ -87,9 +89,10 @@ const Cuser = styled.img`
 
 
 const Name = styled.text`
-  width:32px;
   cursor: pointer;
 `
+
+
 
 const Dropdown = styled.div`
   position: absolute;
