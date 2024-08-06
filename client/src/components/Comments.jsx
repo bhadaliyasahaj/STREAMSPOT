@@ -4,6 +4,7 @@ import Comment from "./Comment";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
+import Person from "@mui/icons-material/Person"
 
 const Container = styled.div``;
 
@@ -32,35 +33,41 @@ const Input = styled.input`
 `;
 
 const Notice = styled.h2`
-  color: ${({theme})=> theme.text};
+  color: ${({ theme }) => theme.text};
 `
 
-const Comments = ({videoId}) => {
-  const [comments,setComments] = useState([]);
-  const {currentUser} = useSelector(state=>state.user)
-  const [focus,setFocus] = useState(false)
-  const [newcomm,setNewComm] = useState("")
+const Noticepara = styled.p`
+  font-size: 15px;
+  color: ${({ theme }) => theme.textSoft};
+  /* padding: 20px 40%; */
+`
 
-  const handleButton = ()=>{
+const Comments = ({ videoId }) => {
+  const [comments, setComments] = useState([]);
+  const { currentUser } = useSelector(state => state.user)
+  const [focus, setFocus] = useState(false)
+  const [newcomm, setNewComm] = useState("")
+
+  const handleButton = () => {
     setFocus(true)
   }
 
-  const handlePostButton = async ()=>{
+  const handlePostButton = async () => {
     console.log("hello");
-    const res = await axios.post("/comments/",{desc:newcomm,videoID:videoId})
+    const res = await axios.post("/comments/", { desc: newcomm, videoID: videoId })
     setNewComm("")
-    setComments((prev)=>[...prev,res.data])
+    setComments((prev) => [...prev, res.data])
     console.log(comments);
     setFocus(false)
   }
 
-  const handleDeletedComment = (commentId)=>{
-    setComments(comments.filter((comment)=>comment._id !== commentId))
+  const handleDeletedComment = (commentId) => {
+    setComments(comments.filter((comment) => comment._id !== commentId))
   }
 
 
-  useEffect(()=>{
-    const fetchComments = async ()=>{
+  useEffect(() => {
+    const fetchComments = async () => {
       try {
         const res = await axios.get(`/comments/${videoId}`);
         setComments(res.data)
@@ -69,19 +76,26 @@ const Comments = ({videoId}) => {
       }
     }
     fetchComments()
-  },[videoId])
+  }, [videoId])
+
+  console.log(comments.length == 0);
 
   return (
     <Container>
       {currentUser ? <NewComment>
-        <Avatar src={currentUser.img} />
-        <Input placeholder="Add a comment..." value={newcomm} onFocus={handleButton} onChange={(e)=>setNewComm(e.target.value)}/>
+        {currentUser.img ? <Avatar src={currentUser.img} /> : <Person style={{
+          width: "50px",
+          height: "50px",
+          color:"gray",
+          borderRadius: "50%",
+          border:"1px solid white"}}/>}
+        <Input placeholder="Add a comment..." value={newcomm} onFocus={handleButton} onChange={(e) => setNewComm(e.target.value)} />
         {focus && <Button onClick={handlePostButton}>POST</Button>}
       </NewComment> : (<Notice>Sign In To Comment, Like And Subscribe</Notice>)}
-      {(comments != [])? (
-        comments.map((comment)=>(
-          <Comment key={comment._id} comment={comment} onDelete={handleDeletedComment}/>
-        ))) : (<h2>Loading</h2>)
+      {(comments.length !== 0) ? (
+        comments.map((comment) => (
+          <Comment key={comment._id} comment={comment} onDelete={handleDeletedComment} />
+        ))) : (<div style={{ display: "flex", justifyContent: "center" }}><Noticepara>No Comments Yet</Noticepara></div>)
       }
     </Container>
   );

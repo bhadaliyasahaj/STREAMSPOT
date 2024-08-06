@@ -10,7 +10,7 @@ import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
-import LiveTvOutlinedIcon from "@mui/icons-material/LiveTvOutlined";
+import MyvideoIcon from "@mui/icons-material/VideocamOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
@@ -162,10 +162,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <ArticleOutlinedIcon />
           News
         </Item>
+        <Link style={{ textDecoration: "none", color: "inherit" }} to="myvideos" >
         <Item>
-          <LiveTvOutlinedIcon />
-          Live
+          <MyvideoIcon />
+          My Videos
         </Item>
+        </Link>
         <Hr />
         <Item>
           <SettingsOutlinedIcon />

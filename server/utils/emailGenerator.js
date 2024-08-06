@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
+import dotenv from 'dotenv'
+
+dotenv.config({path:"\.env"})
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   secure: true,
   port: 465,
   auth: {
-    user: "mrbhadaliya@gmail.com",
-    pass: "wfzyekwskwyxfiye",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -28,11 +31,11 @@ export const mailGenerator = async (email, name, code) => {
         </head>
         <body>
             <div class="container">
-                <h2>Welcome to VideoTube! ${name}</h2>
+                <h2>Welcome to StreamSpot! ${name}</h2>
                 <p>Thank you for signing up. Please verify your email address with code given below:</p>
                 <p class="button">${code}</p>
                 <p>If you did not create an account, please ignore this email.</p>
-                <p class="footer">VideoTube Team<br>support@videotube.com</p>
+                <p class="footer">StreamSpot Team<br>support@StreamSpot.com</p>
             </div>
         </body>
         </html>

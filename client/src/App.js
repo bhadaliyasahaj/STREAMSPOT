@@ -41,6 +41,7 @@ function App() {
                   <Route path="search" element={<Search/>} />
                   <Route path="signin" element={<SignIn />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="myvideos" element={<Home type="myvideos" />} />
                   <Route path="video">
                     <Route path=":id" element={<Video />} />
                   </Route>

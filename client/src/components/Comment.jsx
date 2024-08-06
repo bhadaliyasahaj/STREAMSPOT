@@ -5,6 +5,7 @@ import { format } from "timeago.js";
 import Commentload from "./loadComponent/Commentload";
 import DeleteButton from "@mui/icons-material/DeleteOutline";
 import { useSelector } from "react-redux";
+import Person from "@mui/icons-material/Person4";
 
 const Container = styled.div`
   display: flex;
@@ -14,10 +15,10 @@ const Container = styled.div`
 `;
 
 const Avatar = styled.img`
-  width:40px;
-  height:40px;
-  border-radius:50%;
-`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+`;
 
 const Details = styled.div`
   display: flex;
@@ -43,52 +44,78 @@ const Text = styled.span`
   cursor: pointer;
 `;
 
-const Comment = ({ comment ,onDelete}) => {
-  const [user, setUser] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [allowDelete, setAllowDelete] = useState(false)
-  const {currentUser} = useSelector(state=>state.user)
-  const {currentVideo} = useSelector(state=>state.video)
+const Comment = ({ comment, onDelete }) => {
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [allowDelete, setAllowDelete] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const { currentVideo } = useSelector((state) => state.video);
 
   // console.log(currentVideo,currentUser);
-  const handleRightClick = ()=>{
-    if(currentUser._id === comment.userId || currentUser._id === currentVideo.userId){
-      setAllowDelete(!allowDelete)
+  const handleRightClick = () => {
+    if (
+      currentUser._id === comment.userId ||
+      currentUser._id === currentVideo.userId
+    ) {
+      setAllowDelete(!allowDelete);
     }
-  }
+  };
 
-  const handleCommentDelete = async ()=>{
-    const res = await axios.delete(`/comments/${comment._id}`)
+  const handleCommentDelete = async () => {
+    const res = await axios.delete(`/comments/${comment._id}`);
     console.log(res.data);
-    setLoading(true)
-    onDelete(comment._id)
-    setLoading(false)
-  }
-  
+    setLoading(true);
+    onDelete(comment._id);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const getUser = async () => {
       await axios(`/users/find/${comment.userId}`).then((res) => {
-        setUser(res.data)
-        setLoading(false)
-      })
-    }
-    getUser()
-  }, [comment.userId,setLoading])
+        setUser(res.data);
+        setLoading(false);
+      });
+    };
+    getUser();
+  }, [comment.userId, setLoading]);
 
   return (
     <>
-      {loading ? (<Commentload />) : (<Container>
-        <Avatar src={user.img} />
-        <Details>
-          <Name>
-            {user.name} <Date>{format(comment.createdAt)}</Date>
-          </Name>
-          <Text onClick={handleRightClick}>
-            {comment.desc}
-          </Text>
-        {allowDelete && <DeleteButton style={{ position: "absolute", right: "50px",cursor:"pointer" }} onClick={handleCommentDelete}/>}
-        </Details>
-      </Container>)}
+      {loading ? (
+        <Commentload />
+      ) : (
+        <Container>
+          {user.img ? (
+            <Avatar src={user.img} />
+          ) : (
+            <Person
+              style={{
+                width: "40px",
+                height: "40px",
+                color: "gray",
+                borderRadius: "50%",
+                border: "1px solid white",
+              }}
+            />
+          )}
+          <Details>
+            <Name>
+              {user.name} <Date>{format(comment.createdAt)}</Date>
+            </Name>
+            <Text onClick={handleRightClick}>{comment.desc}</Text>
+            {allowDelete && (
+              <DeleteButton
+                style={{
+                  position: "absolute",
+                  right: "50px",
+                  cursor: "pointer",
+                }}
+                onClick={handleCommentDelete}
+              />
+            )}
+          </Details>
+        </Container>
+      )}
     </>
   );
 };

@@ -15,6 +15,7 @@ import { format } from "timeago.js";
 import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
 import Videoload from "../components/loadComponent/Videoload";
+import Person from "@mui/icons-material/AccountCircleOutlined";
 
 const Container = styled.div`
   display: flex;
@@ -148,6 +149,7 @@ const Video = () => {
   };
   
   useEffect(() => {
+    dispatch(fetchSuccess(null))
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
@@ -224,7 +226,12 @@ const Video = () => {
             <Hr />
             <Channel>
               <ChannelInfo>
-                <Image src={channel.img} />
+                {channel.img ? <Image src={channel.img} />:<Person  style={{
+                minWidth: "50px",
+                height: "50px",
+                color: "gray",
+                borderRadius: "50%",
+              }}/>}
                 <ChannelDetail>
                   <ChannelName>{channel.name}</ChannelName>
                   <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>

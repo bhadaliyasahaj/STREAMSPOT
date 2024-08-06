@@ -119,3 +119,16 @@ export const search = async (req, res, next) => {
     }
 }
 
+export const myvideos = async(req,res,next)=>{
+    const user = req.user.id;
+    console.log(user);
+    try {
+        const videos = await Video.find({userId: `${user}`})
+        res.status(200).json(videos)
+        console.log(videos);
+    } catch (err) {
+        console.log(err);
+        next(err)
+    }
+}
+

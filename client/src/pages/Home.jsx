@@ -18,6 +18,7 @@ const Home = ({type}) => {
       await axios.get(`/videos/${type}`).then((res)=>{
         if(!res) return <h1>Data Not Exist</h1>
         setVideos(res.data)
+        console.log(videos);
       })
     }
     fetchVideos()
