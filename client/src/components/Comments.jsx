@@ -53,11 +53,9 @@ const Comments = ({ videoId }) => {
   }
 
   const handlePostButton = async () => {
-    console.log("hello");
     const res = await axios.post("/comments/", { desc: newcomm, videoID: videoId })
     setNewComm("")
     setComments((prev) => [...prev, res.data])
-    console.log(comments);
     setFocus(false)
   }
 
@@ -78,7 +76,6 @@ const Comments = ({ videoId }) => {
     fetchComments()
   }, [videoId])
 
-  console.log(comments.length == 0);
 
   return (
     <Container>

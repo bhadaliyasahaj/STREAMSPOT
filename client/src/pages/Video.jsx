@@ -7,7 +7,7 @@ import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutl
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { dislike, fetchSuccess, like } from "../redux/videoSlice";
 import axios from "axios";
@@ -16,6 +16,11 @@ import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
 import Videoload from "../components/loadComponent/Videoload";
 import Person from "@mui/icons-material/AccountCircleOutlined";
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
+import Notification from "../components/Notification";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import {app} from '../firebaseConfig.js'
+
 
 const Container = styled.div`
   display: flex;
@@ -138,25 +143,37 @@ const More = styled.p`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-  
+
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const path = useLocation().pathname.split("/")[2];
   const [channel, setChannel] = useState({});
   const [more, setMore] = useState(false);
+  const [allowDelete, setAllowDelete] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [resp, setResp] = useState("");
+
 
   const handleMore = () => {
     setMore((prevMore) => !prevMore);
   };
-  
+
   useEffect(() => {
     dispatch(fetchSuccess(null))
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
         const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`);
-        
+
         setChannel(channelRes.data);
         dispatch(fetchSuccess({ ...videoRes.data, views: videoRes.data.views + 1 }));
+
+        if (channelRes.data._id === currentUser._id) {
+          setAllowDelete(true)
+          console.log(allowDelete);
+        } else (
+          setAllowDelete(false)
+        )
 
         await axios.put(`/videos/view/${path}`);
       } catch (error) {
@@ -165,7 +182,7 @@ const Video = () => {
     };
     fetchData();
   }, [path, dispatch]);
-  
+
   const handleLike = async () => {
     await axios.put(`/users/like/${currentVideo._id}`);
     dispatch(like(currentUser._id));
@@ -193,8 +210,29 @@ const Video = () => {
     dispatch(subscription(channel._id));
   };
 
-  const handleShare = ()=>{
-    
+  const handleShare = () => {
+
+  }
+
+  const handleVideoDelete = async () => {
+    try {
+      const filename = currentVideo.imgUrl.split(/%2F|%20/)
+
+      const storage = getStorage(app);
+
+      const desertRef = ref(storage, `/users/${currentUser._id}/`);
+
+      deleteObject(desertRef).then(async () => {
+        const res = await axios.delete(`/videos/${currentVideo._id}`);
+        setResp(res.data.message)
+        setVisible(true)
+        navigate("/")
+      }).catch((error) => {
+
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -216,22 +254,25 @@ const Video = () => {
                   {currentUser && currentVideo.dislikes?.includes(currentUser._id) ? <ThumbDownIcon /> : <ThumbDownOffAltOutlinedIcon />} Dislike
                 </Button>
                 <Button>
-                  <ReplyOutlinedIcon onClick={handleShare}/> Share
+                  <ReplyOutlinedIcon onClick={handleShare} /> Share
                 </Button>
                 <Button>
                   <AddTaskOutlinedIcon /> Save
                 </Button>
+                {allowDelete && (<Button onClick={handleVideoDelete}>
+                  <DeleteOutline /> Delete
+                </Button>)}
               </Buttons>
             </Details>
             <Hr />
             <Channel>
               <ChannelInfo>
-                {channel.img ? <Image src={channel.img} />:<Person  style={{
-                minWidth: "50px",
-                height: "50px",
-                color: "gray",
-                borderRadius: "50%",
-              }}/>}
+                {channel.img ? <Image src={channel.img} /> : <Person style={{
+                  minWidth: "50px",
+                  height: "50px",
+                  color: "gray",
+                  borderRadius: "50%",
+                }} />}
                 <ChannelDetail>
                   <ChannelName>{channel.name}</ChannelName>
                   <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
@@ -257,6 +298,7 @@ const Video = () => {
       ) : (
         <Videoload />
       )}
+      {resp && <Notification message={resp} visible={visible} />}
     </>
   );
 };

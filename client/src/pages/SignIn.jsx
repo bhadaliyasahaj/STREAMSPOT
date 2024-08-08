@@ -132,6 +132,8 @@ const SignIn = () => {
           console.log(res);
           dispatch(loginSuccess(res.data));
           navigate("/");
+          setResp("Successfully Logged In");
+          setVisible(true);
         });
     } catch (resp) {
       setResp(resp.response.data.message);
@@ -183,6 +185,8 @@ const SignIn = () => {
           name: details.name,
         });
         setorgCode(res.data.code);
+        setResp("Code Is Sended To Your Mail");
+        setVisible(true);
       }
     } catch (err) {
       setResp(err.response.data.message);

@@ -26,10 +26,10 @@ const slideOut = keyframes`
 `
 
 const Container = styled.div`
-    position: absolute;
+    position: fixed;
     /* visibility: hidden; */
-    right: 20px;
-    top: 80px;
+    right: 30px;
+    top: 100px;
     width: 200px;
     padding: 10px 20px;
     color: #329dfa;

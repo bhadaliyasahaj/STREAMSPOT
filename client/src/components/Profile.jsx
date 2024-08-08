@@ -147,7 +147,6 @@ function Profile() {
         try {
             dispatch(loginSuccess({ ...currentUser, img: imgurl }));
             const res = await axios.put(`/users/${currentUser._id}`, { img: imgurl });
-            console.log(res.data);
         } catch (error) {
             console.error('Update failed:', error);
         }
