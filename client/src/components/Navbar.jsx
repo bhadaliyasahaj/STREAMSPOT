@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOff";
-import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined"
+import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Upload from './Upload'
+import Upload from "./Upload";
 import axios from "axios";
 import { loginSuccess } from "../redux/userSlice";
+import Person from "@mui/icons-material/Person4";
 
 // import { Avatar } from "@mui/material";
 
@@ -17,7 +18,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.bgLighter};
   height: 56px;
   z-index: 10;
-  width:100%;
+  width: 100%;
 `;
 
 const Wrapper = styled.div`
@@ -64,35 +65,32 @@ const Button = styled.button`
 `;
 
 const User = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
-  gap:10px;
-  font-weight:500;
+  gap: 10px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text};
-`
+`;
 
 const Avatar = styled.img`
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background-color:#999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #999;
   cursor: pointer;
-`
+`;
 
 const Cuser = styled.img`
-   width:32px;
-  height:32px;
-  border-radius:50%;
-  background-color:#999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #999;
   cursor: pointer;
-`
-
+`;
 
 const Name = styled.text`
   cursor: pointer;
-`
-
-
+`;
 
 const Dropdown = styled.div`
   position: absolute;
@@ -116,10 +114,10 @@ const DropdownItem = styled.div`
 `;
 
 const Navbar = () => {
-  const navigate = useNavigate()
-  const { currentUser } = useSelector(state => state.user)
-  const dispatch = useDispatch()
-  const [open, setOpen] = useState(false)
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -129,49 +127,82 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     // Implement logout logic here
-    await axios.post(`/users/logout/${currentUser._id}`).then((res)=>{
+    await axios.post(`/users/logout/${currentUser._id}`).then((res) => {
       console.log(res.data);
       dispatch(loginSuccess(null));
-    })
+    });
     setDropdownOpen(false);
-    navigate("/")
+    navigate("/");
   };
 
-  const handleVideoButton = ()=>{
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setOpen(true)
-  }
+  const handleVideoButton = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setOpen(true);
+  };
 
   return (
     <>
       <Container>
         <Wrapper>
           <Search>
-            <Input placeholder="Search" onChange={(e) => setQ(e.target.value)} />
-            <SearchOutlinedIcon onClick={() => { navigate(`/search/?q=${q}`); }} />
+            <Input
+              placeholder="Search"
+              onChange={(e) => setQ(e.target.value)}
+            />
+            <SearchOutlinedIcon
+              onClick={() => {
+                navigate(`/search/?q=${q}`);
+              }}
+            />
           </Search>
           {currentUser ? (
             <User>
-              <VideoCallOutlinedIcon onClick={handleVideoButton} style={{ cursor: "pointer", fontSize: "35px" }} />
-              {currentUser.img ? (<Cuser src={currentUser.img} onClick={handleAvatarClick}/>) : <Avatar onClick={handleAvatarClick}/> }
+              <VideoCallOutlinedIcon
+                onClick={handleVideoButton}
+                style={{ cursor: "pointer", fontSize: "35px" }}
+              />
+              {currentUser.img ? (
+                <Cuser src={currentUser.img} onClick={handleAvatarClick} />
+              ) : (
+                <Person
+                  onClick={handleAvatarClick}
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    border: "1px solid #999",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
               {dropdownOpen && (
-              <Dropdown>
-                <DropdownItem onClick={() => {navigate('/profile');setDropdownOpen(false);}}>Profile</DropdownItem>
-                <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
-              </Dropdown>
-            )}
-              <Name onClick={handleAvatarClick}>{(currentUser.name.split(" "))[0]}</Name>
+                <Dropdown>
+                  <DropdownItem
+                    onClick={() => {
+                      navigate("/profile");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    Profile
+                  </DropdownItem>
+                  <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+                </Dropdown>
+              )}
+              <Name onClick={handleAvatarClick}>
+                {currentUser.name.split(" ")[0]}
+              </Name>
             </User>
-          ) : <Link to="signin" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>
-          }
+          ) : (
+            <Link to="signin" style={{ textDecoration: "none" }}>
+              <Button>
+                <AccountCircleOutlinedIcon />
+                SIGN IN
+              </Button>
+            </Link>
+          )}
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen} userId={currentUser._id}/>}
+      {open && <Upload setOpen={setOpen} userId={currentUser._id} />}
     </>
   );
 };

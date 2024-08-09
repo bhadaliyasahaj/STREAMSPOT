@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import Notification from "../components/Notification.jsx";
-import validator from 'validator'
+import validator from "validator";
 
 const Container = styled.div`
   display: flex;
@@ -142,29 +142,31 @@ const SignIn = () => {
     }
   };
 
-  const validatePassword = (password)=> {
+  const validatePassword = (password) => {
     const pattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
     return pattern.test(password);
-  }
+  };
 
-  const validateEmail = (email)=>{
+  const validateEmail = (email) => {
     return validator.isEmail(email);
-  }
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       if (validatePassword(details.password) && verify) {
-        await axios.post("/auth/signup", {
-          name: details.name,
-          password: details.password,
-          email: details.email,
-        }).then((res)=>{
-          setResp(res.data)
-          setVisible(true)
-        })
+        await axios
+          .post("/auth/signup", {
+            name: details.name,
+            password: details.password,
+            email: details.email,
+          })
+          .then((res) => {
+            setResp(res.data);
+            setVisible(true);
+          });
       } else {
         throw new Error("Enter Valid Password Or Verify Mail");
       }

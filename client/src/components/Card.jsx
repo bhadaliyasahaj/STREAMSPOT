@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { format } from 'timeago.js'
+import { format } from "timeago.js";
 import Homeload from "./loadComponent/Homeload";
 
 const Container = styled.div`
@@ -55,60 +55,74 @@ const Info = styled.div`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-
-
 const Card = ({ type, video }) => {
-  const [channel, setChannel] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [title, setTitle] = useState(true)
+  const [channel, setChannel] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState(true);
 
   useEffect(() => {
     const fetchChannel = async () => {
       await axios.get(`/users/find/${video.userId}`).then((res) => {
-        setChannel(res.data)
-        setLoading(false)
-        setTitle(vidtitle(video.title))
-      })
-    }
-    fetchChannel()
-  }, [video.userId])
+        setChannel(res.data);
+        setLoading(false);
+        setTitle(vidtitle(video.title));
+      });
+    };
+    fetchChannel();
+  }, [video.userId]);
 
   const vidtitle = (str) => {
-    if (type !== "sm"){
+    if (type !== "sm") {
       if (str.length <= 80) {
-        return str
+        return str;
       }
-      return str.slice(0, 80) + "..."
-  }else{
-    if(str.length <=50){
-      return str
+      return str.slice(0, 80) + "...";
+    } else {
+      if (str.length <= 50) {
+        return str;
+      }
+      return str.slice(0, 50) + "...";
     }
-    return str.slice(0,50) + "..."
-  }
-}
+  };
 
-return (
-  <> {(loading) ? (<Homeload />) : (
-    <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
-      <Container type={type}>
-        <Image
-          type={type}
-          src={video.imgUrl}
-        />
-        <Details type={type}>
-          {type !== "sm" && (channel.img ? <ChannelImage type={type} src={channel.img} /> : <PersonIcon style={{ width: "36px", height: "36px", borderRadius: "50%", color: "gray", border: "1px solid gray", padding: "3px" }} />)}
-          <Texts>
-            <Title>{title}</Title>
-            <ChannelName>{channel.name}</ChannelName>
-            <Info>{video.views} views • {format(video.createdAt)}</Info>
-          </Texts>
-        </Details>
-      </Container>
-    </Link>
-  )}
-  </>
-
-);
+  return (
+    <>
+      {" "}
+      {loading ? (
+        <Homeload />
+      ) : (
+        <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
+          <Container type={type}>
+            <Image type={type} src={video.imgUrl} />
+            <Details type={type}>
+              {type !== "sm" &&
+                (channel.img ? (
+                  <ChannelImage type={type} src={channel.img} />
+                ) : (
+                  <PersonIcon
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "50%",
+                      color: "gray",
+                      border: "1px solid gray",
+                      padding: "3px",
+                    }}
+                  />
+                ))}
+              <Texts>
+                <Title>{title}</Title>
+                <ChannelName>{channel.name}</ChannelName>
+                <Info>
+                  {video.views} views • {format(video.createdAt)}
+                </Info>
+              </Texts>
+            </Details>
+          </Container>
+        </Link>
+      )}
+    </>
+  );
 };
 
 export default Card;

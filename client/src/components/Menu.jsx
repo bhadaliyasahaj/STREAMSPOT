@@ -73,9 +73,9 @@ const Title = styled.h2`
 `;
 
 const Logo = styled.div`
-  position:sticky;
-  top:0px;
-  left:0;
+  position: sticky;
+  top: 0px;
+  left: 0;
   height: 40px;
   padding-top: 14px;
   background-color: ${({ theme }) => theme.bgLighter};
@@ -92,12 +92,19 @@ const Img = styled.img`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
-  const {currentUser} = useSelector(state=>state.user) 
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <Container>
       <Wrapper>
-      <Link to="/" style={{ textDecoration: "none", color: "inherit",backgroundColor:"black" }}>
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            backgroundColor: "black",
+          }}
+        >
           <Logo>
             <Img src={StreamSpot} />
             StreamSpot
@@ -115,7 +122,10 @@ const Menu = ({ darkMode, setDarkMode }) => {
             Explore
           </Item>
         </Link>
-        <Link to="subscriptions" style={{ textDecoration: "none", color: "inherit" }}>
+        <Link
+          to="subscriptions"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <Item>
             <SubscriptionsOutlinedIcon />
             Subscriptions
@@ -131,16 +141,20 @@ const Menu = ({ darkMode, setDarkMode }) => {
           History
         </Item>
         <Hr />
-        {!currentUser && <><Login>
-          Sign in to like videos, comment, and subscribe.
-          <Link to="signin" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>
-        </Login>
-        <Hr /></>}
+        {!currentUser && (
+          <>
+            <Login>
+              Sign in to like videos, comment, and subscribe.
+              <Link to="signin" style={{ textDecoration: "none" }}>
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  SIGN IN
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        )}
         <Title>BEST OF STREAMSPOT</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
@@ -162,11 +176,14 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <ArticleOutlinedIcon />
           News
         </Item>
-        <Link style={{ textDecoration: "none", color: "inherit" }} to="myvideos" >
-        <Item>
-          <MyvideoIcon />
-          My Videos
-        </Item>
+        <Link
+          style={{ textDecoration: "none", color: "inherit" }}
+          to="myvideos"
+        >
+          <Item>
+            <MyvideoIcon />
+            My Videos
+          </Item>
         </Link>
         <Hr />
         <Item>

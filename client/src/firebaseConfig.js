@@ -6,8 +6,7 @@ const firebaseConfig = {
   projectId: "videotube-3fecc",
   storageBucket: "videotube-3fecc.appspot.com",
   messagingSenderId: "703214522187",
-  appId: "1:703214522187:web:fa837b0f8bedf9fb10e2ce"
+  appId: "1:703214522187:web:fa837b0f8bedf9fb10e2ce",
 };
-
 
 export const app = initializeApp(firebaseConfig);

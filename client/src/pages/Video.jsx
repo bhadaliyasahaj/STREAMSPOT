@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { dislike, fetchSuccess, like } from "../redux/videoSlice";
 import axios from "axios";
 import { format } from "timeago.js";
@@ -19,8 +19,7 @@ import Person from "@mui/icons-material/AccountCircleOutlined";
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
 import Notification from "../components/Notification";
 import { getStorage, ref, deleteObject } from "firebase/storage";
-import {app} from '../firebaseConfig.js'
-
+import { app } from "../firebaseConfig.js";
 
 const Container = styled.div`
   display: flex;
@@ -145,7 +144,7 @@ const Video = () => {
   const { currentVideo } = useSelector((state) => state.video);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
   const [channel, setChannel] = useState({});
   const [more, setMore] = useState(false);
@@ -153,27 +152,42 @@ const Video = () => {
   const [visible, setVisible] = useState(false);
   const [resp, setResp] = useState("");
 
-
   const handleMore = () => {
     setMore((prevMore) => !prevMore);
   };
 
   useEffect(() => {
-    dispatch(fetchSuccess(null))
+    dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
-        const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`);
+        const channelRes = await axios.get(
+          `/users/find/${videoRes.data.userId}`
+        );
 
         setChannel(channelRes.data);
-        dispatch(fetchSuccess({ ...videoRes.data, views: videoRes.data.views + 1 }));
+        dispatch(
+          fetchSuccess({ ...videoRes.data, views: videoRes.data.views + 1 })
+        );
+
+        console.log(
+          decodeURIComponent(currentVideo.videoUrl)
+            .split("/")
+            .pop()
+            .split("?")[0]
+            .trim("")
+        );
+        console.log(
+          decodeURIComponent(currentVideo.imgUrl)
+            .split("/")
+            .pop()
+            .split("?")[0]
+            .replace(/\s+/g, "")
+        );
 
         if (channelRes.data._id === currentUser._id) {
-          setAllowDelete(true)
-          console.log(allowDelete);
-        } else (
-          setAllowDelete(false)
-        )
+          setAllowDelete(true);
+        } else setAllowDelete(false);
 
         await axios.put(`/videos/view/${path}`);
       } catch (error) {
@@ -210,34 +224,48 @@ const Video = () => {
     dispatch(subscription(channel._id));
   };
 
-  const handleShare = () => {
-
-  }
+  const handleShare = () => {};
 
   const handleVideoDelete = async () => {
     try {
-      const filename = currentVideo.imgUrl.split(/%2F|%20/)
-
       const storage = getStorage(app);
 
-      const desertRef = ref(storage, `/users/${currentUser._id}/`);
+      const videoRef = ref(
+        storage,
+        `/users/${currentUser._id}/${decodeURIComponent(currentVideo.videoUrl)
+          .split("/")
+          .pop()
+          .split("?")[0]
+          .replace(/\s+/g, "")}`
+      );
+      const imgRef = ref(
+        storage,
+        `/users/${currentUser._id}/${decodeURIComponent(currentVideo.imgUrl)
+          .split("/")
+          .pop()
+          .split("?")[0]
+          .replace(/\s+/g, "")}`
+      );
 
-      deleteObject(desertRef).then(async () => {
-        const res = await axios.delete(`/videos/${currentVideo._id}`);
-        setResp(res.data.message)
-        setVisible(true)
-        navigate("/")
-      }).catch((error) => {
-
-      });
+      deleteObject(videoRef)
+        .then(async () => {
+          await axios.delete(`/videos/${currentVideo._id}`);
+          setResp("Video Has Been Successfully Deleted");
+          setVisible(true);
+          navigate("/");
+        })
+        .catch((error) => {});
+      deleteObject(imgRef)
+        .then(async () => {})
+        .catch((error) => {});
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
-      {(channel && currentVideo) ? (
+      {channel && currentVideo ? (
         <Container>
           <Content>
             <VideoWrapper>
@@ -245,13 +273,27 @@ const Video = () => {
             </VideoWrapper>
             <Title>{currentVideo.title}</Title>
             <Details>
-              <Info>{currentVideo.views} views • {format(currentVideo.createdAt)}</Info>
+              <Info>
+                {currentVideo.views} views • {format(currentVideo.createdAt)}
+              </Info>
               <Buttons>
                 <Button onClick={handleLike}>
-                  {currentUser && currentVideo.likes?.includes(currentUser._id) ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />} {currentVideo.likes?.length}
+                  {currentUser &&
+                  currentVideo.likes?.includes(currentUser._id) ? (
+                    <ThumbUpIcon />
+                  ) : (
+                    <ThumbUpOutlinedIcon />
+                  )}{" "}
+                  {currentVideo.likes?.length}
                 </Button>
                 <Button onClick={handleDislike}>
-                  {currentUser && currentVideo.dislikes?.includes(currentUser._id) ? <ThumbDownIcon /> : <ThumbDownOffAltOutlinedIcon />} Dislike
+                  {currentUser &&
+                  currentVideo.dislikes?.includes(currentUser._id) ? (
+                    <ThumbDownIcon />
+                  ) : (
+                    <ThumbDownOffAltOutlinedIcon />
+                  )}{" "}
+                  Dislike
                 </Button>
                 <Button>
                   <ReplyOutlinedIcon onClick={handleShare} /> Share
@@ -259,27 +301,35 @@ const Video = () => {
                 <Button>
                   <AddTaskOutlinedIcon /> Save
                 </Button>
-                {allowDelete && (<Button onClick={handleVideoDelete}>
-                  <DeleteOutline /> Delete
-                </Button>)}
+                {allowDelete && (
+                  <Button onClick={handleVideoDelete}>
+                    <DeleteOutline /> Delete
+                  </Button>
+                )}
               </Buttons>
             </Details>
             <Hr />
             <Channel>
               <ChannelInfo>
-                {channel.img ? <Image src={channel.img} /> : <Person style={{
-                  minWidth: "50px",
-                  height: "50px",
-                  color: "gray",
-                  borderRadius: "50%",
-                }} />}
+                {channel.img ? (
+                  <Image src={channel.img} />
+                ) : (
+                  <Person
+                    style={{
+                      minWidth: "50px",
+                      height: "50px",
+                      color: "gray",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
                 <ChannelDetail>
                   <ChannelName>{channel.name}</ChannelName>
-                  <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
+                  <ChannelCounter>
+                    {channel.subscribers} subscribers
+                  </ChannelCounter>
                   <Description>
-                    <Desc more={more}>
-                      {currentVideo.desc}
-                    </Desc>
+                    <Desc more={more}>{currentVideo.desc}</Desc>
                     <More onClick={handleMore}>
                       <strong>{more ? "Show Less" : "...More"}</strong>
                     </More>
@@ -287,7 +337,10 @@ const Video = () => {
                 </ChannelDetail>
               </ChannelInfo>
               <Subscribe onClick={handleSubscription}>
-                {currentUser && currentUser.subscribedUsers?.includes(channel._id) ? "SUBSCRIBED" : "SUBSCRIBE"}
+                {currentUser &&
+                currentUser.subscribedUsers?.includes(channel._id)
+                  ? "SUBSCRIBED"
+                  : "SUBSCRIBE"}
               </Subscribe>
             </Channel>
             <Hr />
