@@ -100,7 +100,6 @@ export const sub = async (req, res, next) => {
 
 export const getByTag = async (req, res, next) => {
     const tags = req.query.tags.split(",")
-    console.log(tags);
     try {
         const videos = await Video.find({ tags: { $in: tags } }).limit(20)
         res.status(200).json(videos)
@@ -121,11 +120,9 @@ export const search = async (req, res, next) => {
 
 export const myvideos = async(req,res,next)=>{
     const user = req.user.id;
-    console.log(user);
     try {
         const videos = await Video.find({userId: `${user}`})
         res.status(200).json(videos)
-        console.log(videos);
     } catch (err) {
         console.log(err);
         next(err)

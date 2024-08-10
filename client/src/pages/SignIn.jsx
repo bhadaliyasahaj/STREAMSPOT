@@ -131,9 +131,9 @@ const SignIn = () => {
         .then((res) => {
           console.log(res);
           dispatch(loginSuccess(res.data));
-          navigate("/");
           setResp("Successfully Logged In");
           setVisible(true);
+          navigate("/",);
         });
     } catch (resp) {
       setResp(resp.response.data.message);

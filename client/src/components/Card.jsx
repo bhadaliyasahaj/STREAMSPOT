@@ -7,7 +7,7 @@ import { format } from "timeago.js";
 import Homeload from "./loadComponent/Homeload";
 
 const Container = styled.div`
-  width: ${(props) => props.type !== "sm" && "360px"};
+  width: ${(props) => props.type !== "sm" && "300px"};
   margin-bottom: ${(props) => (props.type === "sm" ? "10px" : "45px")};
   cursor: pointer;
   display: ${(props) => props.type === "sm" && "flex"};
@@ -15,9 +15,10 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
-  height: ${(props) => (props.type === "sm" ? "120px" : "202px")};
+  width: ${(props) => props.type !== "sm" ? "100%":"100px"};
+  height: ${(props) => (props.type === "sm" ? "120px" : "200px")};
   background-color: #999;
+  border-radius: 20px;
   flex: 1;
 `;
 
@@ -89,7 +90,7 @@ const Card = ({ type, video }) => {
     <>
       {" "}
       {loading ? (
-        <Homeload />
+        <Homeload type={type}/>
       ) : (
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
           <Container type={type}>

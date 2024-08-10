@@ -23,7 +23,10 @@ const Home = ({ type }) => {
         if (!res) return <h1>Data Not Exist</h1>;
         setVideos(res.data);
         console.log(videos);
-      });
+      }).catch((err)=>{
+        console.log(err);
+        
+      })
     };
     fetchVideos();
   }, [type]);

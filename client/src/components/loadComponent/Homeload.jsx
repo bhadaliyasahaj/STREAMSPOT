@@ -13,14 +13,14 @@ const skeletonAnimation = keyframes`
 
 // Skeleton styles
 const SkeletonContainer = styled.div`
-  width: ${(props) => props.type !== "sm" && "360px"};
+  width: ${(props) => props.type !== "sm" && "300px"};
   margin-bottom: ${(props) => (props.type === "sm" ? "10px" : "45px")};
   display: ${(props) => props.type === "sm" && "flex"};
   gap: 10px;
 `;
 
 const SkeletonImage = styled.div`
-  width: 100%;
+  width: ${(props) => props.type !== "sm" ? "100%":"195px"};
   height: ${(props) => (props.type === "sm" ? "120px" : "202px")};
   background: linear-gradient(90deg, #f0f0f0ae 25%, #e0e0e0 50%, #f0f0f0ae 75%);
   background-size: 200% 100%;
@@ -77,12 +77,12 @@ const SkeletonInfo = styled.div`
 
 
 
-function Homeload() {
+function Homeload({type}) {
     return (
-        <SkeletonContainer >
-            <SkeletonImage  />
-            <SkeletonDetails >
-                <SkeletonChannelImage  />
+        <SkeletonContainer type={type}>
+            <SkeletonImage  type={type}/>
+            <SkeletonDetails type={type}>
+                <SkeletonChannelImage  type={type}/>
                 <SkeletonTexts>
                     <SkeletonTitle />
                     <SkeletonChannelName />

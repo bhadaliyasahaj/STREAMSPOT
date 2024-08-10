@@ -16,7 +16,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import StreamSpot from "../img/logo.png";
 import { useSelector } from "react-redux";
 
@@ -38,11 +38,11 @@ const Item = styled.div`
   align-items: center;
   gap: 20px;
   cursor: pointer;
-  padding: 7.5px 0px;
-
-  &:hover {
+  padding: 7.5px 7.5px;
+  background-color: ${({theme,active})=> active?theme.soft:"transparent"};
+  /* &:hover {
     background-color: ${({ theme }) => theme.soft};
-  }
+  } */
 `;
 
 const Hr = styled.hr`
@@ -93,6 +93,7 @@ const Img = styled.img`
 
 const Menu = ({ darkMode, setDarkMode }) => {
   const { currentUser } = useSelector((state) => state.user);
+  const location = useLocation()  
 
   return (
     <Container>
@@ -111,13 +112,13 @@ const Menu = ({ darkMode, setDarkMode }) => {
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-          <Item>
+          <Item active={location.pathname === "/"}>
             <HomeIcon />
             Home
           </Item>
         </Link>
         <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
-          <Item>
+          <Item active={location.pathname === "/trends"}>
             <ExploreOutlinedIcon />
             Explore
           </Item>
@@ -126,7 +127,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           to="subscriptions"
           style={{ textDecoration: "none", color: "inherit" }}
         >
-          <Item>
+          <Item active={location.pathname === "/subscriptions"}>
             <SubscriptionsOutlinedIcon />
             Subscriptions
           </Item>
@@ -180,7 +181,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           style={{ textDecoration: "none", color: "inherit" }}
           to="myvideos"
         >
-          <Item>
+          <Item active={location.pathname === "/myvideos"}>
             <MyvideoIcon />
             My Videos
           </Item>
