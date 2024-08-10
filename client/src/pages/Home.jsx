@@ -37,10 +37,9 @@ const Home = ({ type }) => {
   return (
     <Container>
       {videos.length > 0 ? (
-        // videos.map((video) => {
-        //   return <Card key={video._id} video={video} />;
-        // })
-        console.log(videos.length)
+        videos.map((video) => {
+          return <Card key={video._id} video={video} />;
+        })
       ) : type === "sub" ? (
         <Noticepara>You Haven't Subscribed Yet</Noticepara>
       ) : (
