@@ -25,7 +25,7 @@ const Home = ({ type }) => {
         console.log(videos);
       }).catch((err)=>{
         console.log(err);
-        
+        setVideos([])
       })
     };
     fetchVideos();
@@ -33,7 +33,7 @@ const Home = ({ type }) => {
 
   return (
     <Container>
-      {videos.length !== 0 ? (
+      {videos.length > 0 ? (
         videos.map((video) => {
           return <Card key={video._id} video={video} />;
         })
