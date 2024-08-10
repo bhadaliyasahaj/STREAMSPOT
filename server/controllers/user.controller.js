@@ -99,7 +99,8 @@ export const dislike = async (req,res,next) =>{
 export const logout = (req,res,next)=>{
     if(req.user.id === req.params.id){
         res.clearCookie("access_token", {
-            httpOnly: true
+            httpOnly: true,
+            sameSite:"None"
         }).status(200).json({ message: "Cookie cleared" });
         
     }else{
