@@ -105,6 +105,7 @@ const SignIn = () => {
   const [orgcode, setorgCode] = useState("");
   const [verify, setVerify] = useState(false);
   const [details, setDetails] = useState({ name: "", email: "", password: "" });
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const user = (e) => {
     const { name, value } = e.target;
@@ -124,7 +125,7 @@ const SignIn = () => {
     dispatch(loginStart());
     try {
       await axios
-        .post("/auth/signin", {
+        .post(`${API_URL}/auth/signin`, {
           name: details.name,
           password: details.password,
         })
@@ -158,7 +159,7 @@ const SignIn = () => {
     try {
       if (validatePassword(details.password) && verify) {
         await axios
-          .post("/auth/signup", {
+          .post(`${API_URL}/auth/signup`, {
             name: details.name,
             password: details.password,
             email: details.email,
@@ -182,7 +183,7 @@ const SignIn = () => {
         setResp("Enter Valid Details");
         setVisible(true);
       } else {
-        const res = await axios.post("/auth/getcode", {
+        const res = await axios.post(`${API_URL}/auth/getcode`, {
           email: details.email,
           name: details.name,
         });

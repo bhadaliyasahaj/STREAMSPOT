@@ -151,18 +151,18 @@ const Video = () => {
   const [allowDelete, setAllowDelete] = useState(false);
   const [visible, setVisible] = useState(false);
   const [resp, setResp] = useState("");
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const handleMore = () => {
     setMore((prevMore) => !prevMore);
   };
 
   useEffect(() => {
-    dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`/videos/find/${path}`);
+        const videoRes = await axios.get(`${API_URL}/videos/find/${path}`);
         const channelRes = await axios.get(
-          `/users/find/${videoRes.data.userId}`
+          `${API_URL}/users/find/${videoRes.data.userId}`
         );
 
         setChannel(channelRes.data);
@@ -189,7 +189,7 @@ const Video = () => {
           setAllowDelete(true);
         } else setAllowDelete(false);
 
-        await axios.put(`/videos/view/${path}`);
+        await axios.put(`${API_URL}/videos/view/${path}`);
       } catch (error) {
         console.log(error);
       }
@@ -198,24 +198,24 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axios.put(`/users/like/${currentVideo._id}`);
+    await axios.put(`${API_URL}/users/like/${currentVideo._id}`);
     dispatch(like(currentUser._id));
   };
 
   const handleDislike = async () => {
-    await axios.put(`/users/dislike/${currentVideo._id}`);
+    await axios.put(`${API_URL}/users/dislike/${currentVideo._id}`);
     dispatch(dislike(currentUser._id));
   };
 
   const handleSubscription = async () => {
     if (currentUser.subscribedUsers.includes(channel._id)) {
-      await axios.put(`/users/unsub/${channel._id}`);
+      await axios.put(`${API_URL}/users/unsub/${channel._id}`);
       setChannel((prevChannel) => ({
         ...prevChannel,
         subscribers: prevChannel.subscribers - 1,
       }));
     } else {
-      await axios.put(`/users/sub/${channel._id}`);
+      await axios.put(`${API_URL}/users/sub/${channel._id}`);
       setChannel((prevChannel) => ({
         ...prevChannel,
         subscribers: prevChannel.subscribers + 1,
@@ -249,7 +249,7 @@ const Video = () => {
 
       deleteObject(videoRef)
         .then(async () => {
-          await axios.delete(`/videos/${currentVideo._id}`);
+          await axios.delete(`${API_URL}/videos/${currentVideo._id}`);
           setResp("Video Has Been Successfully Deleted");
           setVisible(true);
           navigate("/");
