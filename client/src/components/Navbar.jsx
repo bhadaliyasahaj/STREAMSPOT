@@ -128,7 +128,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     // Implement logout logic here
-    await axios.post(`${API_URL}/users/logout/${currentUser._id}`).then((res) => {
+    await axios.post(`${API_URL}/users/logout/${currentUser._id}`,{},{withCredentials:true}).then((res) => {
       console.log(res.data);
       dispatch(loginSuccess(null));
     });
