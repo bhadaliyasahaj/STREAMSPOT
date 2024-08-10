@@ -20,9 +20,9 @@ const Home = ({ type }) => {
   useEffect(() => {
     const fetchVideos = async () => {
       await axios.get(`/videos/${type}`).then((res) => {
-        if (!res) return <h1>Data Not Exist</h1>;
-        setVideos(res.data);
-        console.log(videos);
+        const validVideo = res.data.filter(video=>video!==undefined && video!==null)
+        setVideos(validVideo);
+        console.log(res.data);
       }).catch((err)=>{
         console.log(err);
         setVideos([])
@@ -38,6 +38,7 @@ const Home = ({ type }) => {
         //   return <Card key={video._id} video={video} />;
         // })
         console.log(videos.length)
+        
       ) : type === "sub" ? (
         <Noticepara>You Haven't Subscribed Yet</Noticepara>
       ) : (
