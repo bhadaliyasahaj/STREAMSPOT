@@ -16,11 +16,13 @@ const Noticepara = styled.p`
 
 const Home = ({ type }) => {
   const [videos, setVideos] = useState([]);
-
+  const API_URL = process.env.REACT_APP_API_URI;
+  console.log(API_URL);
+  
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`/videos/${type}`);
+        const res = await axios.get(`${API_URL}/videos/${type}`);
         if (res && res.data && Array.isArray(res.data)) {
           setVideos(res.data);
         } else {

@@ -15,13 +15,14 @@ function Search() {
   const [qavail, setQAvail] = useState(true);
   const query = useLocation().search;
   const navigator = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URI;
 
   useEffect(() => {
     if (query === "?q=") {
       setQAvail(false);
     } else {
       const fetchVideos = async () => {
-        const res = await axios.get(`/videos/search${query}`);
+        const res = await axios.get(`${API_URL}/videos/search${query}`);
         setVideos(res.data);
         setQAvail(true);
       };

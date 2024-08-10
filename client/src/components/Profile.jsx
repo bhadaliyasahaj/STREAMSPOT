@@ -101,6 +101,7 @@ function Profile() {
   const [imgPerc, setImgPerc] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const uploadFile = (file, urlType) => {
     if (!file) return;
@@ -152,7 +153,7 @@ function Profile() {
     if (!currentUser.img || currentUser.img === "") {
       try {
         dispatch(loginSuccess({ ...currentUser, img: imgurl }));
-        const res = await axios.put(`/users/${currentUser._id}`, {
+        const res = await axios.put(`${API_URL}/users/${currentUser._id}`, {
           img: imgurl,
         });
       } catch (error) {
@@ -175,7 +176,7 @@ function Profile() {
           .then(async () => {
             setImgPerc(0);
             dispatch(loginSuccess({ ...currentUser, img: "" }));
-            const res = await axios.put(`/users/${currentUser._id}`, {
+            const res = await axios.put(`${API_URL}/users/${currentUser._id}`, {
               img: "",
             });
           })

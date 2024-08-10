@@ -85,6 +85,7 @@ function Upload({ setOpen, userId }) {
   const [videoPerc, setVideoPerc] = useState(0);
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const navigate = useNavigate();
 
@@ -146,7 +147,7 @@ function Upload({ setOpen, userId }) {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const res = await axios.post("/videos", { ...inputs, tags });
+    const res = await axios.post(`${API_URL}/videos`, { ...inputs, tags });
     setOpen(false);
     res.status === 200 && navigate(`/video/${res.data._id}`);
   };

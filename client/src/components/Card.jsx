@@ -60,8 +60,9 @@ const Card = ({ type, video }) => {
   const [channel, setChannel] = useState({});
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(true);
-  const API_URL = process.env.REACT_URI;
-
+  const API_URL = process.env.REACT_APP_API_URI;
+  console.log(API_URL);
+  
   useEffect(() => {
     const fetchChannel = async () => {
       await axios.get(`${API_URL}/users/find/${video.userId}`).then((res) => {

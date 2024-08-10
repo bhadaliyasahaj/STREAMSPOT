@@ -120,7 +120,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const API_URL = process.env.REACT_URI;
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const handleAvatarClick = () => {
     setDropdownOpen(!dropdownOpen);

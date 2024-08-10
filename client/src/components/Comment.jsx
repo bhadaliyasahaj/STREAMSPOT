@@ -50,7 +50,7 @@ const Comment = ({ comment, onDelete }) => {
   const [allowDelete, setAllowDelete] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-  const API_URL = process.env.REACT_URI;
+  const API_URL = process.env.REACT_APP_API_URI;
 
   // console.log(currentVideo,currentUser);
   const handleRightClick = () => {

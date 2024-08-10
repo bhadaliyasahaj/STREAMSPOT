@@ -45,7 +45,7 @@ const Comments = ({ videoId }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [focus, setFocus] = useState(false);
   const [newcomm, setNewComm] = useState("");
-  const API_URL = process.env.REACT_URI;
+  const API_URL = process.env.REACT_APP_API_URI;
 
   const handleButton = () => {
     setFocus(true);

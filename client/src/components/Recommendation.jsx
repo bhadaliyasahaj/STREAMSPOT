@@ -11,11 +11,12 @@ const Container = styled.div`
 function Recommendation({ tags }) {
   const { currentVideo } = useSelector((state) => state.video);
   const [videos, setVideos] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URI;
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`/videos/tags/?tags=${tags}`);
+        const res = await axios.get(`${API_URL}/videos/tags/?tags=${tags}`);
         const videoArr = res.data.filter((r) => r._id !== currentVideo._id);
         setVideos(videoArr);
       } catch (error) {}
