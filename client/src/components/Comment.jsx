@@ -50,6 +50,7 @@ const Comment = ({ comment, onDelete }) => {
   const [allowDelete, setAllowDelete] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
+  const API_URL = process.env.REACT_URI;
 
   // console.log(currentVideo,currentUser);
   const handleRightClick = () => {
@@ -62,7 +63,7 @@ const Comment = ({ comment, onDelete }) => {
   };
 
   const handleCommentDelete = async () => {
-    const res = await axios.delete(`/comments/${comment._id}`);
+    const res = await axios.delete(`${API_URL}/comments/${comment._id}`);
     console.log(res.data);
     setLoading(true);
     onDelete(comment._id);
@@ -71,7 +72,7 @@ const Comment = ({ comment, onDelete }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      await axios(`/users/find/${comment.userId}`).then((res) => {
+      await axios(`${API_URL}/users/find/${comment.userId}`).then((res) => {
         setUser(res.data);
         setLoading(false);
       });

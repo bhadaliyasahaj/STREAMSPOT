@@ -45,13 +45,14 @@ const Comments = ({ videoId }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [focus, setFocus] = useState(false);
   const [newcomm, setNewComm] = useState("");
+  const API_URL = process.env.REACT_URI;
 
   const handleButton = () => {
     setFocus(true);
   };
 
   const handlePostButton = async () => {
-    const res = await axios.post("/comments/", {
+    const res = await axios.post(`${API_URL}/comments/`, {
       desc: newcomm,
       videoID: videoId,
     });
@@ -67,7 +68,7 @@ const Comments = ({ videoId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`/comments/${videoId}`);
+        const res = await axios.get(`${API_URL}/comments/${videoId}`);
         setComments(res.data);
       } catch (error) {
         console.log(error);

@@ -120,6 +120,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const API_URL = process.env.REACT_URI;
 
   const handleAvatarClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -127,7 +128,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     // Implement logout logic here
-    await axios.post(`/users/logout/${currentUser._id}`).then((res) => {
+    await axios.post(`${API_URL}/users/logout/${currentUser._id}`).then((res) => {
       console.log(res.data);
       dispatch(loginSuccess(null));
     });
