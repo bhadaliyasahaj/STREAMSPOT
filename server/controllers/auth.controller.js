@@ -34,7 +34,8 @@ export const signin = async (req,res,next)=>{
 
         res.cookie("access_token", token,{
             httpOnly:true,
-            maxAge: 365 * 24 * 60 * 60 * 1000
+            maxAge: 365 * 24 * 60 * 60 * 1000,
+            sameSite:"None"
         })
         .status(200)
         .json(others)
