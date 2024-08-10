@@ -2,7 +2,7 @@
   "name": "video_app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://streamspot-t6q3.onrender.com",
+  "proxy": "https://streamspot-t6q3.onrender.com/api/",
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
