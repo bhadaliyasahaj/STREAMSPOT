@@ -128,7 +128,7 @@ const SignIn = () => {
         .post(`${API_URL}/auth/signin`, {
           name: details.name,
           password: details.password,
-        })
+        },{withCredentials:true})
         .then((res) => {
           console.log(res);
           dispatch(loginSuccess(res.data));
