@@ -21,11 +21,11 @@ const Home = ({ type }) => {
     const fetchVideos = async () => {
       try {
         const res = await axios.get(`/videos/${type}`);
-        if(res){
-        setVideos(res.data);
-      }else{
-        setVideos([])
-      }
+        if (res && res.data && Array.isArray(res.data)) {
+          setVideos(res.data);
+        } else {
+          setVideos([]);
+        }
       } catch (err) {
         console.log(err);
         setVideos([]);
