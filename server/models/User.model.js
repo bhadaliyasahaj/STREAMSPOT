@@ -23,7 +23,8 @@ const UserSchema = new mongoose.Schema({
         default: 0
     },
     subscribedUsers: {
-        type: [String]
+        type: [String],
+        unique:true
     }  
 },{timestamps:true})
 

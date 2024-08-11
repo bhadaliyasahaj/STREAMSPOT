@@ -151,6 +151,8 @@ const Video = () => {
   const [allowDelete, setAllowDelete] = useState(false);
   const [visible, setVisible] = useState(false);
   const [resp, setResp] = useState("");
+  const [event, setEvent] = useState("");
+  const [load, setLoad] = useState(false);
   const API_URL = process.env.REACT_APP_API_URI;
 
   const handleMore = () => {
@@ -158,7 +160,7 @@ const Video = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSuccess(null))
+    dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`${API_URL}/videos/find/${path}`);
@@ -171,7 +173,11 @@ const Video = () => {
           fetchSuccess({ ...videoRes.data, views: videoRes.data.views + 1 })
         );
 
-        if (channelRes && currentUser && channelRes.data._id === currentUser._id) {
+        if (
+          channelRes &&
+          currentUser &&
+          channelRes.data._id === currentUser._id
+        ) {
           setAllowDelete(true);
         } else setAllowDelete(false);
 
@@ -184,30 +190,54 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axios.put(`${API_URL}/users/like/${currentVideo._id}`,{},{withCredentials:true});
+    await axios.put(
+      `${API_URL}/users/like/${currentVideo._id}`,
+      {},
+      { withCredentials: true }
+    );
     dispatch(like(currentUser._id));
   };
 
   const handleDislike = async () => {
-    await axios.put(`${API_URL}/users/dislike/${currentVideo._id}`,{},{withCredentials:true});
+    await axios.put(
+      `${API_URL}/users/dislike/${currentVideo._id}`,
+      {},
+      { withCredentials: true }
+    );
     dispatch(dislike(currentUser._id));
   };
 
   const handleSubscription = async () => {
-    if (currentUser.subscribedUsers.includes(channel._id)) {
-      await axios.put(`${API_URL}/users/unsub/${channel._id}`,{},{withCredentials:true});
-      setChannel((prevChannel) => ({
-        ...prevChannel,
-        subscribers: prevChannel.subscribers - 1,
-      }));
-    } else {
-      await axios.put(`${API_URL}/users/sub/${channel._id}`,{},{withCredentials:true});
-      setChannel((prevChannel) => ({
-        ...prevChannel,
-        subscribers: prevChannel.subscribers + 1,
-      }));
+    if (event === "sub") return;
+    setEvent("sub");
+    try {
+      if (currentUser.subscribedUsers.includes(channel._id)) {
+        await axios.put(
+          `${API_URL}/users/unsub/${channel._id}`,
+          {},
+          { withCredentials: true }
+        );
+        setChannel((prevChannel) => ({
+          ...prevChannel,
+          subscribers: prevChannel.subscribers - 1,
+        }));
+      } else {
+        await axios.put(
+          `${API_URL}/users/sub/${channel._id}`,
+          {},
+          { withCredentials: true }
+        );
+        setChannel((prevChannel) => ({
+          ...prevChannel,
+          subscribers: prevChannel.subscribers + 1,
+        }));
+      }
+      dispatch(subscription(channel._id));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setEvent("");
     }
-    dispatch(subscription(channel._id));
   };
 
   const handleShare = () => {};
@@ -235,7 +265,9 @@ const Video = () => {
 
       deleteObject(videoRef)
         .then(async () => {
-          await axios.delete(`${API_URL}/videos/${currentVideo._id}`,{withCredentials:true});
+          await axios.delete(`${API_URL}/videos/${currentVideo._id}`, {
+            withCredentials: true,
+          });
           setResp("Video Has Been Successfully Deleted");
           setVisible(true);
           navigate("/");
@@ -322,7 +354,7 @@ const Video = () => {
                   </Description>
                 </ChannelDetail>
               </ChannelInfo>
-              <Subscribe onClick={handleSubscription}>
+              <Subscribe onClick={handleSubscription} disabled={event==="sub"}>
                 {currentUser &&
                 currentUser.subscribedUsers?.includes(channel._id)
                   ? "SUBSCRIBED"
