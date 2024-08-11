@@ -158,6 +158,7 @@ const Video = () => {
   };
 
   useEffect(() => {
+    dispatch(fetchSuccess(null))
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`${API_URL}/videos/find/${path}`);
