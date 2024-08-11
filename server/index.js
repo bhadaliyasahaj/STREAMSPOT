@@ -17,16 +17,16 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
 };
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-});
 
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsOptions))
 
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     next();
+// });
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)

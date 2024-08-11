@@ -183,24 +183,24 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axios.put(`${API_URL}/users/like/${currentVideo._id}`);
+    await axios.put(`${API_URL}/users/like/${currentVideo._id}`,{},{withCredentials:true});
     dispatch(like(currentUser._id));
   };
 
   const handleDislike = async () => {
-    await axios.put(`${API_URL}/users/dislike/${currentVideo._id}`);
+    await axios.put(`${API_URL}/users/dislike/${currentVideo._id}`,{},{withCredentials:true});
     dispatch(dislike(currentUser._id));
   };
 
   const handleSubscription = async () => {
     if (currentUser.subscribedUsers.includes(channel._id)) {
-      await axios.put(`${API_URL}/users/unsub/${channel._id}`);
+      await axios.put(`${API_URL}/users/unsub/${channel._id}`,{},{withCredentials:true});
       setChannel((prevChannel) => ({
         ...prevChannel,
         subscribers: prevChannel.subscribers - 1,
       }));
     } else {
-      await axios.put(`${API_URL}/users/sub/${channel._id}`);
+      await axios.put(`${API_URL}/users/sub/${channel._id}`,{},{withCredentials:true});
       setChannel((prevChannel) => ({
         ...prevChannel,
         subscribers: prevChannel.subscribers + 1,
