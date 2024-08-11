@@ -16,6 +16,13 @@ const corsOptions = {
     credentials: true, // Allow credentials (cookies, etc.) to be sent
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
 };
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+});
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsOptions))
