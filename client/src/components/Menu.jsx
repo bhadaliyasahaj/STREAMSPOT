@@ -21,36 +21,75 @@ import StreamSpot from "../img/logo.png";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
-  flex: 1.1;
+  /* flex: 1; */
+  width: 15vw;
   background-color: ${({ theme }) => theme.bgLighter};
   /* height: 100%; */
   color: ${({ theme }) => theme.text};
   font-size: 14px;
   position: sticky;
   top: 0;
+  /* overflow-y: hidden; */
+  /* flex: 0.6; */
+  @media (max-width:786px) , (max-width: 825px){
+    min-width: 10%;
+    max-width: 10%;
+    height: 100vh;
+    /* overflow: hidden; */
+    /* position: fixed; */
+    z-index: 500;
+  }
 `;
 const Wrapper = styled.div`
   padding: 0px 26px 15px 26px;
+  @media (max-width:786px), (max-width: 825px) {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Item = styled.div`
+  /* width: min-content; */
   display: flex;
   align-items: center;
   gap: 20px;
   cursor: pointer;
   padding: 7.5px 7.5px;
   background-color: ${({theme,active})=> active?theme.soft:"transparent"};
-  /* &:hover {
+  &:hover {
     background-color: ${({ theme }) => theme.soft};
-  } */
+  }
+    @media (max-width:786px), (max-width: 825px) {
+    /* width: 100px; */
+    border-radius: 20px;
+    gap: 0;
+    padding: 5px 7px;
+  }
+`;
+
+const Text = styled.span`
+   @media (max-width:786px), (max-width: 825px) {
+   display: none;
+  }
 `;
 
 const Hr = styled.hr`
   margin: 15px 0px;
   border: 0.5px solid ${({ theme }) => theme.soft};
+  @media (max-width:768px) {
+    margin: 10px 0px;
+    width: 80%;
+  }
 `;
 
-const Login = styled.div``;
+const Login = styled.div`
+ @media (max-width:786px) , (max-width: 825px){
+   display: none;
+  }
+`;
 const Button = styled.button`
   padding: 5px 15px;
   background-color: transparent;
@@ -70,11 +109,15 @@ const Title = styled.h2`
   font-weight: 500;
   color: #aaaaaa;
   margin-bottom: 20px;
+  @media (max-width:786px), (max-width: 825px) {
+   display: none;
+  }
 `;
 
 const Logo = styled.div`
+/* width: min-content; */
   position: sticky;
-  top: 0px;
+  top: 0;
   left: 0;
   height: 40px;
   padding-top: 14px;
@@ -85,6 +128,11 @@ const Logo = styled.div`
   font-weight: bold;
   margin-bottom: 25px;
   /* border: 2px solid red; */
+  @media (max-width: 768px), (max-width: 825px) {
+    margin-bottom: 6px;
+  padding-top: 9px;
+    /* height: ; */
+  }
 `;
 
 const Img = styled.img`
@@ -102,25 +150,24 @@ const Menu = ({ darkMode, setDarkMode }) => {
           to="/"
           style={{
             textDecoration: "none",
-            color: "inherit",
-            backgroundColor: "black",
+            color: "inherit"
           }}
         >
           <Logo>
             <Img src={StreamSpot} />
-            StreamSpot
+            <Text>StreamSpot</Text>
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <Item active={location.pathname === "/"}>
             <HomeIcon />
-            Home
+            <Text>Home</Text>
           </Item>
         </Link>
         <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
           <Item active={location.pathname === "/trends"}>
             <ExploreOutlinedIcon />
-            Explore
+            <Text>Explore</Text>
           </Item>
         </Link>
         <Link
@@ -129,17 +176,17 @@ const Menu = ({ darkMode, setDarkMode }) => {
         >
           <Item active={location.pathname === "/subscriptions"}>
             <SubscriptionsOutlinedIcon />
-            Subscriptions
+            <Text>Subscriptions</Text>
           </Item>
         </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon />
-          Library
+          <Text>Library</Text>
         </Item>
         <Item>
           <HistoryOutlinedIcon />
-          History
+          <Text>History</Text>
         </Item>
         <Hr />
         {!currentUser && (
@@ -152,30 +199,30 @@ const Menu = ({ darkMode, setDarkMode }) => {
                   SIGN IN
                 </Button>
               </Link>
-            </Login>
             <Hr />
+            </Login>
           </>
         )}
         <Title>BEST OF STREAMSPOT</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
-          Music
+          <Text>Music</Text>
         </Item>
         <Item>
           <SportsBasketballOutlinedIcon />
-          Sports
+          <Text>Sports</Text>
         </Item>
         <Item>
           <SportsEsportsOutlinedIcon />
-          Gaming
+          <Text>Gaming</Text>
         </Item>
         <Item>
           <MovieOutlinedIcon />
-          Movies
+          <Text>Movies</Text>
         </Item>
         <Item>
           <ArticleOutlinedIcon />
-          News
+          <Text>News</Text>
         </Item>
         <Link
           style={{ textDecoration: "none", color: "inherit" }}
@@ -183,25 +230,25 @@ const Menu = ({ darkMode, setDarkMode }) => {
         >
           <Item active={location.pathname === "/myvideos"}>
             <MyvideoIcon />
-            My Videos
+            <Text>My Videos</Text>
           </Item>
         </Link>
         <Hr />
         <Item>
           <SettingsOutlinedIcon />
-          Settings
+          <Text>Settings</Text>
         </Item>
         <Item>
           <FlagOutlinedIcon />
-          Report
+          <Text>Report</Text>
         </Item>
         <Item>
           <HelpOutlineOutlinedIcon />
-          Help
+          <Text>Help</Text>
         </Item>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
-          {darkMode ? "Light" : "Dark"} Mode
+          <Text>{darkMode ? "Light" : "Dark"} Mode</Text>
         </Item>
       </Wrapper>
     </Container>

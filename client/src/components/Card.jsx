@@ -12,6 +12,10 @@ const Container = styled.div`
   cursor: pointer;
   display: ${(props) => props.type === "sm" && "flex"};
   gap: 10px;
+
+  @media (max-width:768px) {
+    width: 300px;
+  }
 `;
 
 const Image = styled.img`

@@ -12,14 +12,21 @@ import Profile from "./components/Profile";
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
+  height: 100%;
 `;
 
 const Main = styled.div`
-  flex: 7;
+  /* flex: 7; */
+  width: 100%;
   background-color: ${({ theme }) => theme.bg};
 `;
+
 const Wrapper = styled.div`
   padding: 22px 40px;
+  @media (max-width: 768px) {
+    padding:20px 0px;
+  }
 `;
 
 function App() {

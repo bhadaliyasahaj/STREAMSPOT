@@ -16,7 +16,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   background-color: ${({ theme }) => theme.bgLighter};
-  height: 56px;
+  height: 50px;
   z-index: 10;
   width: 100%;
 `;
@@ -42,10 +42,17 @@ const Search = styled.div`
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 3px;
+
+  @media (max-width: 768px) {
+    right: auto;
+    left: 10%;
+  }
 `;
 
 const Input = styled.input`
   border: none;
+  width: 90%;
+  height: 100%;
   background-color: transparent;
   outline: none;
   color: ${({ theme }) => theme.text};
@@ -90,6 +97,9 @@ const Cuser = styled.img`
 
 const Name = styled.text`
   cursor: pointer;
+  @media (max-width:768px) {
+    display: none;
+  }
 `;
 
 const Dropdown = styled.div`

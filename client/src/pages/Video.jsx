@@ -24,6 +24,9 @@ import { app } from "../firebaseConfig.js";
 const Container = styled.div`
   display: flex;
   gap: 24px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const Content = styled.div`
@@ -125,6 +128,7 @@ const Subscribe = styled.button`
 `;
 
 const VideoFrame = styled.video`
+  height: 500px;
   max-height: 720px;
   width: 100%;
   object-fit: cover;
@@ -355,7 +359,7 @@ const Video = () => {
                 </ChannelDetail>
               </ChannelInfo>
               <Subscribe onClick={handleSubscription} disabled={event==="sub"}>
-                {event==="sub" ? (currentUser &&
+                {event!=="sub" ? (currentUser &&
                 currentUser.subscribedUsers?.includes(channel._id)
                   ? "SUBSCRIBED"
                   : "SUBSCRIBE"):("SUBSCRIBING..")}

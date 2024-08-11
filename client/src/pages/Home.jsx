@@ -8,7 +8,13 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  @media (max-width: 768px){
+    justify-content: center;
+  }
+  /* height: 100vh;
+  overflow-y: scroll; */
 `;
+
 const Noticepara = styled.p`
   font-size: 15px;
   color: ${({ theme }) => theme.textSoft};
