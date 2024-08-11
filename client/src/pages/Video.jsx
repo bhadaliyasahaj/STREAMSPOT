@@ -170,22 +170,7 @@ const Video = () => {
           fetchSuccess({ ...videoRes.data, views: videoRes.data.views + 1 })
         );
 
-        console.log(
-          decodeURIComponent(currentVideo.videoUrl)
-            .split("/")
-            .pop()
-            .split("?")[0]
-            .trim("")
-        );
-        console.log(
-          decodeURIComponent(currentVideo.imgUrl)
-            .split("/")
-            .pop()
-            .split("?")[0]
-            .replace(/\s+/g, "")
-        );
-
-        if (channelRes.data._id === currentUser._id) {
+        if (channelRes && currentUser && channelRes.data._id === currentUser._id) {
           setAllowDelete(true);
         } else setAllowDelete(false);
 

@@ -55,6 +55,7 @@ export const getVideo = async (req, res, next) => {
 
 export const addView = async (req, res, next) => {
     try {
+        
         await Video.findByIdAndUpdate(req.params.id, {
             $inc: { views: 1 }
         })

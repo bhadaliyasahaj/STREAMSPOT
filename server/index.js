@@ -12,7 +12,7 @@ import cors from 'cors'
 const app = express()
 
 const corsOptions = {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000', // Set your frontend URL
+    origin:process.env.CLIENT_URL, // Set your frontend URL
     credentials: true, // Allow credentials (cookies, etc.) to be sent
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
 };
