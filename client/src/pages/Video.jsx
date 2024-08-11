@@ -355,10 +355,10 @@ const Video = () => {
                 </ChannelDetail>
               </ChannelInfo>
               <Subscribe onClick={handleSubscription} disabled={event==="sub"}>
-                {currentUser &&
+                {event==="sub" ? (currentUser &&
                 currentUser.subscribedUsers?.includes(channel._id)
                   ? "SUBSCRIBED"
-                  : "SUBSCRIBE"}
+                  : "SUBSCRIBE"):("SUBSCRIBING..")}
               </Subscribe>
             </Channel>
             <Hr />
