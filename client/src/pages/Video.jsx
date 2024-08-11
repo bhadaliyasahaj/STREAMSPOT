@@ -234,7 +234,7 @@ const Video = () => {
 
       deleteObject(videoRef)
         .then(async () => {
-          await axios.delete(`${API_URL}/videos/${currentVideo._id}`);
+          await axios.delete(`${API_URL}/videos/${currentVideo._id}`,{withCredentials:true});
           setResp("Video Has Been Successfully Deleted");
           setVisible(true);
           navigate("/");
