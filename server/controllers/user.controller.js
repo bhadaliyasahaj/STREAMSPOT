@@ -100,7 +100,8 @@ export const logout = (req,res,next)=>{
     if(req.user.id === req.params.id){
         res.clearCookie("access_token", {
             httpOnly: true,
-            secure:false
+            secure: true,
+            sameSite:'None'
         }).status(200).json({ message: "Cookie cleared" });
         
     }else{
