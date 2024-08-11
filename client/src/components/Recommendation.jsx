@@ -16,7 +16,7 @@ function Recommendation({ tags }) {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`${API_URL}/videos/tags/?tags=${tags}`);
+        const res = await axios.get(`${API_URL}/videos/tags/?tags=${tags}`,{withCredentials:true});
         const videoArr = res.data.filter((r) => r._id !== currentVideo._id);
         setVideos(videoArr);
       } catch (error) {}

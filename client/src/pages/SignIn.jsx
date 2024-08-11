@@ -163,7 +163,7 @@ const SignIn = () => {
             name: details.name,
             password: details.password,
             email: details.email,
-          })
+          },{withCredentials:true})
           .then((res) => {
             setResp(res.data);
             setVisible(true);
@@ -186,7 +186,7 @@ const SignIn = () => {
         const res = await axios.post(`${API_URL}/auth/getcode`, {
           email: details.email,
           name: details.name,
-        });
+        },{withCredentials:true});
         setorgCode(res.data.code);
         setResp("Code Is Sended To Your Mail");
         setVisible(true);

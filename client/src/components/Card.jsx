@@ -65,7 +65,7 @@ const Card = ({ type, video }) => {
   
   useEffect(() => {
     const fetchChannel = async () => {
-      await axios.get(`${API_URL}/users/find/${video.userId}`).then((res) => {
+      await axios.get(`${API_URL}/users/find/${video.userId}`,{withCredentials:true}).then((res) => {
         setChannel(res.data);
         setLoading(false);
         setTitle(vidtitle(video.title));

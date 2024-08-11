@@ -63,7 +63,7 @@ const Comment = ({ comment, onDelete }) => {
   };
 
   const handleCommentDelete = async () => {
-    const res = await axios.delete(`${API_URL}/comments/${comment._id}`);
+    const res = await axios.delete(`${API_URL}/comments/${comment._id}`,{withCredentials:true});
     console.log(res.data);
     setLoading(true);
     onDelete(comment._id);
@@ -72,7 +72,7 @@ const Comment = ({ comment, onDelete }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      await axios(`${API_URL}/users/find/${comment.userId}`).then((res) => {
+      await axios(`${API_URL}/users/find/${comment.userId}`,{withCredentials:true}).then((res) => {
         setUser(res.data);
         setLoading(false);
       });

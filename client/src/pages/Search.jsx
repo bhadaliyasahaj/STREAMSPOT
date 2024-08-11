@@ -22,7 +22,7 @@ function Search() {
       setQAvail(false);
     } else {
       const fetchVideos = async () => {
-        const res = await axios.get(`${API_URL}/videos/search${query}`);
+        const res = await axios.get(`${API_URL}/videos/search${query}`,{withCredentials:true});
         setVideos(res.data);
         setQAvail(true);
       };

@@ -22,7 +22,7 @@ const Home = ({ type }) => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`${API_URL}/videos/${type}`);
+        const res = await axios.get(`${API_URL}/videos/${type}`,{withCredentials:true});
         if (res && res.data && Array.isArray(res.data)) {
           setVideos(res.data);
         } else {

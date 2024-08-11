@@ -55,7 +55,7 @@ const Comments = ({ videoId }) => {
     const res = await axios.post(`${API_URL}/comments/`, {
       desc: newcomm,
       videoID: videoId,
-    });
+    },{withCredentials:true});
     setNewComm("");
     setComments((prev) => [...prev, res.data]);
     setFocus(false);
@@ -68,7 +68,7 @@ const Comments = ({ videoId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`${API_URL}/comments/${videoId}`);
+        const res = await axios.get(`${API_URL}/comments/${videoId}`,{withCredentials:true});
         setComments(res.data);
       } catch (error) {
         console.log(error);
