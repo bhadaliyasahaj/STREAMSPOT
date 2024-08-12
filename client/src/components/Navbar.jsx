@@ -5,7 +5,6 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOff";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Upload from "./Upload";
 import axios from "axios";
 import { loginSuccess } from "../redux/userSlice";
 import Person from "@mui/icons-material/Person4";
@@ -147,8 +146,7 @@ const Navbar = () => {
   };
 
   const handleVideoButton = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setOpen(true);
+    navigate("/upload")
   };
 
   return (
@@ -213,7 +211,6 @@ const Navbar = () => {
           )}
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen} userId={currentUser._id} />}
     </>
   );
 };

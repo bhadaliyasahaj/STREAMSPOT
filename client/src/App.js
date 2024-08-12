@@ -9,6 +9,8 @@ import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
 import Search from "./pages/Search";
 import Profile from "./components/Profile";
+import UploadPage from "./components/Upload";
+import Category from "./pages/Category";
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +27,7 @@ const Main = styled.div`
 const Wrapper = styled.div`
   padding: 22px 40px;
   @media (max-width: 768px) {
-    padding:20px 0px;
+    padding: 20px 0px;
   }
 `;
 
@@ -45,9 +47,28 @@ function App() {
                   <Route index element={<Home type="random" />} />
                   <Route path="trends" element={<Home type="trend" />} />
                   <Route path="subscriptions" element={<Home type="sub" />} />
+                  <Route path="music" element={<Category category="music" />} />
+                  <Route
+                    path="sports"
+                    element={<Category category="sports" />}
+                  />
+                  <Route
+                    path="gaming"
+                    element={<Category category="gaming" />}
+                  />
+                  <Route
+                    path="movies"
+                    element={<Category category="movies" />}
+                  />
+                  <Route path="news" element={<Category category="news" />} />
+                  <Route
+                    path="history"
+                    element={<Category category="history" />}
+                  />
                   <Route path="search" element={<Search />} />
                   <Route path="signin" element={<SignIn />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="upload" element={<UploadPage />} />
                   <Route path="myvideos" element={<Home type="myvideos" />} />
                   <Route path="video">
                     <Route path=":id" element={<Video />} />

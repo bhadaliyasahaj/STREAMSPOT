@@ -65,7 +65,6 @@ const Card = ({ type, video }) => {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(true);
   const API_URL = process.env.REACT_APP_API_URI;
-  console.log(API_URL);
   
   useEffect(() => {
     const fetchChannel = async () => {

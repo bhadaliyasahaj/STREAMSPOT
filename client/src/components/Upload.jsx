@@ -9,14 +9,15 @@ import {
 import { app } from "../firebaseConfig.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
-  position: absolute;
+  /* height: 100%; */
+  /* position: absolute;
   top: 0;
-  left: 0;
-  background-color: #0000004c;
+  left: 0; */
+  /* background-color: #0000004c; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +26,7 @@ const Container = styled.div`
 `;
 const Wrapper = styled.div`
   width: 600px;
-  height: 600px;
+  /* height: 650px; */
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   padding: 20px;
@@ -33,13 +34,9 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   position: relative;
+  overflow-y: auto;
 `;
-const Close = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-`;
+
 const Title = styled.h1`
   text-align: center;
 `;
@@ -51,12 +48,26 @@ const Input = styled.input`
   padding: 10px;
   background-color: transparent;
 `;
+
 const Desc = styled.textarea`
   border: 1px solid ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.text};
   border-radius: 3px;
   padding: 10px;
   background-color: transparent;
+`;
+
+const Select = styled.select`
+  border: 1px solid ${({ theme }) => theme.soft};
+  color: ${({ theme }) => theme.text};
+  border-radius: 3px;
+  padding: 10px;
+  background-color: transparent;
+`;
+
+const Option = styled.option`
+  background-color: ${({ theme }) => theme.bgLighter};
+  color: ${({ theme }) => theme.text};
 `;
 
 const Button = styled.button`
@@ -68,6 +79,7 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.textHard};
 `;
+
 const Label = styled.label`
   font-size: 14px;
   border-radius: 3px;
@@ -78,13 +90,37 @@ const Label = styled.label`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-function Upload({ setOpen, userId }) {
+const ThumbnailPreview = styled.div`
+  margin-bottom: 20px;
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+`;
+
+const VideoPreview = styled.video`
+   margin-bottom: 20px;
+   border-radius:10px;
+  source {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+`
+
+function Upload() {
   const [img, setImg] = useState(undefined);
   const [video, setVideo] = useState(undefined);
   const [imgPerc, setImgPerc] = useState(0);
   const [videoPerc, setVideoPerc] = useState(0);
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
+  const [category, setCategory] = useState('');
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
+  const {currentUser} = useSelector((state)=>state.user)
+  
   const API_URL = process.env.REACT_APP_API_URI;
 
   const navigate = useNavigate();
@@ -101,10 +137,22 @@ function Upload({ setOpen, userId }) {
     setTags(tags);
   };
 
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    setImg(file);
+    setThumbnailPreview(URL.createObjectURL(file));
+  };
+
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    setVideo(file);
+    setVideoPreview(URL.createObjectURL(file));
+  };
+
   const uploadFile = (file, urlType) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, `/users/${userId}/${fileName}`);
+    const storageRef = ref(storage, `/users/${currentUser._id}/${fileName}`);
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -147,27 +195,34 @@ function Upload({ setOpen, userId }) {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const res = await axios.post(`${API_URL}/videos`, { ...inputs, tags },{withCredentials:true});
-    setOpen(false);
+    const res = await axios.post(`${API_URL}/videos`, { ...inputs, tags, category },{withCredentials:true});
     res.status === 200 && navigate(`/video/${res.data._id}`);
+    setImg(undefined)
+    setImgPerc(0)
+    setVideo(undefined)
+    setVideoPerc(0)
+    setInputs({})
   };
 
   return (
     <Container>
       <Wrapper>
-        <Close onClick={() => setOpen(false)}>X</Close>
+        {/* <Close onClick={() => setOpen(false)}>X</Close> */}
         <Title>Upload Any Video</Title>
         <Label>Video:</Label>
         {videoPerc > 0 ? (
-          "Uploading:" + Math.round(videoPerc) + "%"
+          "Uploading: " + Math.round(videoPerc) + "%"
         ) : (
           <Input
             type="file"
             accept="video/*"
-            onChange={(e) => {
-              setVideo(e.target.files[0]);
-            }}
+            onChange={handleVideoChange}
           />
+        )}
+        {videoPreview && (
+          <VideoPreview width="400" controls>
+            <source src={videoPreview} type={video.type}></source>
+          </VideoPreview>
         )}
         <Input
           type="text"
@@ -186,21 +241,36 @@ function Upload({ setOpen, userId }) {
           placeholder="Separate the tags with hashtags"
           onChange={handleTags}
         />
-        <Label>Image:</Label>
+        <Label>Category:</Label>
+        <Select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <Option value="">Select Category</Option>
+          <Option value="music">Music</Option>
+          <Option value="sports">Sports</Option>
+          <Option value="gaming">Gaming</Option>
+          <Option value="movies">Movies</Option>
+          <Option value="news">News</Option>
+        </Select>
+        <Label>Thumbnail:</Label>
         {imgPerc > 0 ? (
-          "Uploading:" + Math.round(imgPerc) + "%"
+          "Uploading: " + Math.round(imgPerc) + "%"
         ) : (
           <Input
             type="file"
             accept="image/*"
-            onChange={(e) => {
-              setImg(e.target.files[0]);
-            }}
+            onChange={handleThumbnailChange}
           />
+        )}
+        {thumbnailPreview && (
+          <ThumbnailPreview>
+            <img src={thumbnailPreview} alt="Thumbnail Preview" />
+          </ThumbnailPreview>
         )}
         <Button
           onClick={handleUpload}
-          disabled={!inputs.videoUrl || !inputs.imgUrl}
+          disabled={!inputs.videoUrl || !inputs.imgUrl || !setCategory}
         >
           Upload
         </Button>

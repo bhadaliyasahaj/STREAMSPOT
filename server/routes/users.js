@@ -1,30 +1,44 @@
-import express from 'express'
-import { deleteUser, dislike, getUser, like, logout, subscribe, unsubscribe, updateUser } from '../controllers/user.controller.js'
-import { verifyToken } from '../verifyToken.js'
+import express from "express";
+import {
+  addhistory,
+  deleteUser,
+  dislike,
+  getUser,
+  like,
+  logout,
+  subscribe,
+  unsubscribe,
+  updateUser,
+} from "../controllers/user.controller.js";
+import { verifyToken } from "../verifyToken.js";
 
-const router = express.Router()
+const router = express.Router();
 
 //Update User
-router.put("/:id",verifyToken, updateUser)
+router.put("/:id", verifyToken, updateUser);
 
 //Delete User
-router.delete("/:id",verifyToken, deleteUser)
+router.delete("/:id", verifyToken, deleteUser);
 
 //Get User
-router.get("/find/:id", getUser)
+router.get("/find/:id", getUser);
 
 //Subscribe User
-router.put("/sub/:id",verifyToken, subscribe)
+router.put("/sub/:id", verifyToken, subscribe);
 
 //Unsubscribe User
-router.put("/unsub/:id",verifyToken, unsubscribe)
+router.put("/unsub/:id", verifyToken, unsubscribe);
 
 //Like Video
-router.put("/like/:videoId",verifyToken, like)
+router.put("/like/:videoId", verifyToken, like);
 
 //Dislike Video
-router.put("/dislike/:videoId",verifyToken, dislike)
+router.put("/dislike/:videoId", verifyToken, dislike);
 
-router.post("/logout/:id",verifyToken,logout)
+//Logout User
+router.post("/logout/:id", verifyToken, logout);
 
-export default router
+//History of User
+router.put("/history/:videoId", verifyToken, addhistory);
+
+export default router;

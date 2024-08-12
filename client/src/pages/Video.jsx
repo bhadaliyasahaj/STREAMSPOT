@@ -186,6 +186,12 @@ const Video = () => {
         } else setAllowDelete(false);
 
         await axios.put(`${API_URL}/videos/view/${path}`);
+        if(currentUser){  
+          const res = await axios.put(`${API_URL}/users/history/${path}`,{},{withCredentials:true});
+          console.log(res); 
+        }
+
+      
       } catch (error) {
         console.log(error);
       }
@@ -250,22 +256,8 @@ const Video = () => {
     try {
       const storage = getStorage(app);
 
-      const videoRef = ref(
-        storage,
-        `/users/${currentUser._id}/${decodeURIComponent(currentVideo.videoUrl)
-          .split("/")
-          .pop()
-          .split("?")[0]
-          .replace(/\s+/g, "")}`
-      );
-      const imgRef = ref(
-        storage,
-        `/users/${currentUser._id}/${decodeURIComponent(currentVideo.imgUrl)
-          .split("/")
-          .pop()
-          .split("?")[0]
-          .replace(/\s+/g, "")}`
-      );
+      const videoRef = ref(storage,`/users/${currentUser._id}/${decodeURIComponent(currentVideo.videoUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
+      const imgRef = ref(storage,`/users/${currentUser._id}/${decodeURIComponent(currentVideo.imgUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
 
       deleteObject(videoRef)
         .then(async () => {

@@ -31,7 +31,7 @@ const Container = styled.div`
   top: 0;
   /* overflow-y: hidden; */
   /* flex: 0.6; */
-  @media (max-width:786px) , (max-width: 825px){
+  @media (max-width: 786px), (max-width: 825px) {
     min-width: 10%;
     max-width: 10%;
     height: 100vh;
@@ -42,7 +42,7 @@ const Container = styled.div`
 `;
 const Wrapper = styled.div`
   padding: 0px 26px 15px 26px;
-  @media (max-width:786px), (max-width: 825px) {
+  @media (max-width: 786px), (max-width: 825px) {
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -58,11 +58,12 @@ const Item = styled.div`
   gap: 20px;
   cursor: pointer;
   padding: 7.5px 7.5px;
-  background-color: ${({theme,active})=> active?theme.soft:"transparent"};
+  background-color: ${({ theme, active }) =>
+    active ? theme.soft : "transparent"};
   &:hover {
     background-color: ${({ theme }) => theme.soft};
   }
-    @media (max-width:786px), (max-width: 825px) {
+  @media (max-width: 786px), (max-width: 825px) {
     /* width: 100px; */
     border-radius: 20px;
     gap: 0;
@@ -71,23 +72,23 @@ const Item = styled.div`
 `;
 
 const Text = styled.span`
-   @media (max-width:786px), (max-width: 825px) {
-   display: none;
+  @media (max-width: 786px), (max-width: 825px) {
+    display: none;
   }
 `;
 
 const Hr = styled.hr`
   margin: 15px 0px;
   border: 0.5px solid ${({ theme }) => theme.soft};
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     margin: 10px 0px;
     width: 80%;
   }
 `;
 
 const Login = styled.div`
- @media (max-width:786px) , (max-width: 825px){
-   display: none;
+  @media (max-width: 786px), (max-width: 825px) {
+    display: none;
   }
 `;
 const Button = styled.button`
@@ -109,13 +110,13 @@ const Title = styled.h2`
   font-weight: 500;
   color: #aaaaaa;
   margin-bottom: 20px;
-  @media (max-width:786px), (max-width: 825px) {
-   display: none;
+  @media (max-width: 786px), (max-width: 825px) {
+    display: none;
   }
 `;
 
 const Logo = styled.div`
-/* width: min-content; */
+  /* width: min-content; */
   position: sticky;
   top: 0;
   left: 0;
@@ -130,7 +131,7 @@ const Logo = styled.div`
   /* border: 2px solid red; */
   @media (max-width: 768px), (max-width: 825px) {
     margin-bottom: 6px;
-  padding-top: 9px;
+    padding-top: 9px;
     /* height: ; */
   }
 `;
@@ -141,7 +142,7 @@ const Img = styled.img`
 
 const Menu = ({ darkMode, setDarkMode }) => {
   const { currentUser } = useSelector((state) => state.user);
-  const location = useLocation()  
+  const location = useLocation();
 
   return (
     <Container>
@@ -150,7 +151,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           to="/"
           style={{
             textDecoration: "none",
-            color: "inherit"
+            color: "inherit",
           }}
         >
           <Logo>
@@ -184,10 +185,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <VideoLibraryOutlinedIcon />
           <Text>Library</Text>
         </Item>
-        <Item>
-          <HistoryOutlinedIcon />
-          <Text>History</Text>
-        </Item>
+        <Link to="history" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/history"}>
+            <HistoryOutlinedIcon />
+            <Text>History</Text>
+          </Item>
+        </Link>
         <Hr />
         {!currentUser && (
           <>
@@ -199,31 +202,41 @@ const Menu = ({ darkMode, setDarkMode }) => {
                   SIGN IN
                 </Button>
               </Link>
-            <Hr />
+              <Hr />
             </Login>
           </>
         )}
         <Title>BEST OF STREAMSPOT</Title>
-        <Item>
-          <LibraryMusicOutlinedIcon />
-          <Text>Music</Text>
-        </Item>
-        <Item>
-          <SportsBasketballOutlinedIcon />
-          <Text>Sports</Text>
-        </Item>
-        <Item>
-          <SportsEsportsOutlinedIcon />
-          <Text>Gaming</Text>
-        </Item>
-        <Item>
-          <MovieOutlinedIcon />
-          <Text>Movies</Text>
-        </Item>
-        <Item>
-          <ArticleOutlinedIcon />
-          <Text>News</Text>
-        </Item>
+        <Link to="/music" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/music"}>
+            <LibraryMusicOutlinedIcon />
+            <Text>Music</Text>
+          </Item>
+        </Link>
+        <Link to="/sports" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/sports"}>
+            <SportsBasketballOutlinedIcon />
+            <Text>Sports</Text>
+          </Item>
+        </Link>
+        <Link to="/gaming" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/gaming"}>
+            <SportsEsportsOutlinedIcon />
+            <Text>Gaming</Text>
+          </Item>
+        </Link>
+        <Link to="/movies" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/movies"}>
+            <MovieOutlinedIcon />
+            <Text>Movies</Text>
+          </Item>
+        </Link>
+        <Link to="/news" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/news"}>
+            <ArticleOutlinedIcon />
+            <Text>News</Text>
+          </Item>
+        </Link>
         <Link
           style={{ textDecoration: "none", color: "inherit" }}
           to="myvideos"
