@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
 import { darkTheme, lightTheme } from "./utils/Theme";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,HashRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
@@ -50,7 +50,7 @@ function App() {
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <Container>
-        <BrowserRouter>
+        <HashRouter>
           <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
           <Main>
             <Navbar />
@@ -94,7 +94,7 @@ function App() {
               </Routes>
             </Wrapper>
           </Main>
-        </BrowserRouter>
+        </HashRouter>
       </Container>
     </ThemeProvider>
   );
