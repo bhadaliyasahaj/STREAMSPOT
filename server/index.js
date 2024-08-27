@@ -11,6 +11,7 @@ import cors from 'cors'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
+dotenv.config();
 
 
 const app = express()
@@ -20,9 +21,6 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 
 const corsOptions = {
     origin:process.env.CLIENT_URL, // Set your frontend URL
@@ -57,6 +55,10 @@ app.use((err,req,res,next)=>{
         message
     })
 })
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.listen(process.env.PORT,()=>{
     connectDB();
