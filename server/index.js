@@ -8,9 +8,21 @@ import playlistRoutes from './routes/playlist.js'
 import authRoutes from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { fileURLToPath } from 'url'
+import path from 'path'
+
 
 
 const app = express()
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const corsOptions = {
     origin:process.env.CLIENT_URL, // Set your frontend URL
