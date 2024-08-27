@@ -6,6 +6,7 @@ import {
   getUser,
   like,
   logout,
+  newrefreshtoken,
   subscribe,
   unsubscribe,
   updateUser,
@@ -41,4 +42,9 @@ router.post("/logout/:id", verifyToken, logout);
 //History of User
 router.put("/history/:videoId", verifyToken, addhistory);
 
+//verify user
+router.get("/verify",verifyToken)
+
+//generate new access token
+router.post("/refreshtoken",newrefreshtoken)
 export default router;

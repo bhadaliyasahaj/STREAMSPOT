@@ -27,12 +27,26 @@ export const signin = async (req,res,next)=>{
         if(!user) return next(createError(404,"User Not Found"))
         const isCorrect = await bcrypt.compare(req.body.password,user.password)
         if(!isCorrect) return next(createError(400,"Invalid Credentials"))
+
+        const Access_Token = user.createAccessToken()
+        const Refresh_Token = user.createRefreshToken()
+        console.log(Access_Token);
+        console.log(Refresh_Token);
         
-        const token = jwt.sign({id:user._id},process.env.JWT_SECRETKEY)
+        
+        
+        // const token = jwt.sign({id:user._id},process.env.JWT_SECRETKEY,{expiresIn:60})
 
         const {password, ...others} = user._doc
 
-        res.cookie("access_token", token,{
+        res
+        .cookie("access_token", Access_Token,{
+            httpOnly:true,
+            maxAge: 365 * 24 * 60 * 60 * 1000,
+            secure: true,
+            sameSite:'None'
+           })
+        .cookie("refresh_token",Refresh_Token,{
             httpOnly:true,
             maxAge: 365 * 24 * 60 * 60 * 1000,
             secure: true,

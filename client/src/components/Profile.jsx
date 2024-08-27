@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Person from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../redux/userSlice.js";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div`
   display: flex;
@@ -153,9 +154,9 @@ function Profile() {
     if (!currentUser.img || currentUser.img === "") {
       try {
         dispatch(loginSuccess({ ...currentUser, img: imgurl }));
-        const res = await axios.put(`${API_URL}/users/${currentUser._id}`, {
+        const res = await axiosInstance.put(`/users/${currentUser._id}`, {
           img: imgurl,
-        },{withCredentials:true});
+        });
       } catch (error) {
         console.error("Update failed:", error);
       }
@@ -176,7 +177,7 @@ function Profile() {
           .then(async () => {
             setImgPerc(0);
             dispatch(loginSuccess({ ...currentUser, img: "" }));
-            const res = await axios.put(`${API_URL}/users/${currentUser._id}`, {
+            const res = await axiosInstance.put(`/users/${currentUser._id}`, {
               img: "",
             });
           })

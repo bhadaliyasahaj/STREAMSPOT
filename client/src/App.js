@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
@@ -11,6 +11,9 @@ import Search from "./pages/Search";
 import Profile from "./components/Profile";
 import UploadPage from "./components/Upload";
 import Category from "./pages/Category";
+import axiosInstance from "./utils/axiosInstance";
+import Playlist from './components/Playlists'
+// import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +36,16 @@ const Wrapper = styled.div`
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        await axiosInstance.get("/users/verify");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    verifyUser();
+  }, []);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -48,6 +61,10 @@ function App() {
                   <Route path="trends" element={<Home type="trend" />} />
                   <Route path="subscriptions" element={<Home type="sub" />} />
                   <Route path="music" element={<Category category="music" />} />
+                  <Route path="playlist" >
+                    <Route index element={<Playlist />} />
+                    <Route path=":id" element={<Home type="playlist"/>} />
+                  </Route>
                   <Route
                     path="sports"
                     element={<Category category="sports" />}

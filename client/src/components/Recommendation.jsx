@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div`
   flex: 2;
@@ -16,7 +17,7 @@ function Recommendation({ tags }) {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`${API_URL}/videos/tags/?tags=${tags}`,{withCredentials:true});
+        const res = await axiosInstance.get(`/videos/tags/?tags=${tags}`);
         const videoArr = res.data.filter((r) => r._id !== currentVideo._id);
         setVideos(videoArr);
       } catch (error) {}

@@ -6,6 +6,7 @@ import Commentload from "./loadComponent/Commentload";
 import DeleteButton from "@mui/icons-material/DeleteOutline";
 import { useSelector } from "react-redux";
 import Person from "@mui/icons-material/Person4";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ const Comment = ({ comment, onDelete }) => {
   };
 
   const handleCommentDelete = async () => {
-    const res = await axios.delete(`${API_URL}/comments/${comment._id}`,{withCredentials:true});
+    const res = await axiosInstance.delete(`/comments/${comment._id}`);
     console.log(res.data);
     setLoading(true);
     onDelete(comment._id);
@@ -72,7 +73,7 @@ const Comment = ({ comment, onDelete }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      await axios(`${API_URL}/users/find/${comment.userId}`,{withCredentials:true}).then((res) => {
+      await axiosInstance.get(`/users/find/${comment.userId}`).then((res) => {
         setUser(res.data);
         setLoading(false);
       });

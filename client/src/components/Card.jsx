@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
 import Homeload from "./loadComponent/Homeload";
+import axiosInstance from "../utils/axiosInstance.js"
 
 const Container = styled.div`
   width: ${(props) => props.type !== "sm" && "300px"};
@@ -68,7 +69,7 @@ const Card = ({ type, video }) => {
   
   useEffect(() => {
     const fetchChannel = async () => {
-      await axios.get(`${API_URL}/users/find/${video.userId}`,{withCredentials:true}).then((res) => {
+      await axiosInstance.get(`/users/find/${video.userId}`).then((res) => {
         setChannel(res.data);
         setLoading(false);
         setTitle(vidtitle(video.title));
@@ -93,7 +94,6 @@ const Card = ({ type, video }) => {
 
   return (
     <>
-      {" "}
       {loading ? (
         <Homeload type={type}/>
       ) : (

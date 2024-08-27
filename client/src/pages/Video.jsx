@@ -10,7 +10,6 @@ import Comments from "../components/Comments";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { dislike, fetchSuccess, like } from "../redux/videoSlice";
-import axios from "axios";
 import { format } from "timeago.js";
 import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
@@ -20,6 +19,8 @@ import DeleteOutline from "@mui/icons-material/DeleteOutline";
 import Notification from "../components/Notification";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import { app } from "../firebaseConfig.js";
+import axiosInstance from "../utils/axiosInstance.js";
+import Playlistpopup from "../components/Playlistpopup.jsx";
 
 const Container = styled.div`
   display: flex;
@@ -143,6 +144,7 @@ const More = styled.p`
   color: ${({ theme }) => theme.text};
 `;
 
+
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
@@ -156,20 +158,27 @@ const Video = () => {
   const [visible, setVisible] = useState(false);
   const [resp, setResp] = useState("");
   const [event, setEvent] = useState("");
-  const [load, setLoad] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URI;
+  const [save, setSave] = useState(false);
 
   const handleMore = () => {
     setMore((prevMore) => !prevMore);
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [visible]);
+
+  useEffect(() => {
     dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`${API_URL}/videos/find/${path}`);
-        const channelRes = await axios.get(
-          `${API_URL}/users/find/${videoRes.data.userId}`
+        const videoRes = await axiosInstance.get(`/videos/find/${path}`);
+        const channelRes = await axiosInstance.get(
+          `/users/find/${videoRes.data.userId}`
         );
 
         setChannel(channelRes.data);
@@ -185,9 +194,9 @@ const Video = () => {
           setAllowDelete(true);
         } else setAllowDelete(false);
 
-        await axios.put(`${API_URL}/videos/view/${path}`);
+        await axiosInstance.put(`/videos/view/${path}`);
         if(currentUser){  
-          const res = await axios.put(`${API_URL}/users/history/${path}`,{},{withCredentials:true});
+          const res = await axiosInstance.put(`/users/history/${path}`);
           console.log(res); 
         }
 
@@ -200,20 +209,14 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axios.put(
-      `${API_URL}/users/like/${currentVideo._id}`,
-      {},
-      { withCredentials: true }
-    );
+    await axiosInstance.put(
+      `/users/like/${currentVideo._id}`);
     dispatch(like(currentUser._id));
   };
 
   const handleDislike = async () => {
-    await axios.put(
-      `${API_URL}/users/dislike/${currentVideo._id}`,
-      {},
-      { withCredentials: true }
-    );
+    await axiosInstance.put(
+      `/users/dislike/${currentVideo._id}`);
     dispatch(dislike(currentUser._id));
   };
 
@@ -222,20 +225,15 @@ const Video = () => {
     setEvent("sub");
     try {
       if (currentUser.subscribedUsers.includes(channel._id)) {
-        await axios.put(
-          `${API_URL}/users/unsub/${channel._id}`,
-          {},
-          { withCredentials: true }
-        );
+        await axiosInstance.put(
+          `/users/unsub/${channel._id}`);
         setChannel((prevChannel) => ({
           ...prevChannel,
           subscribers: prevChannel.subscribers - 1,
         }));
       } else {
-        await axios.put(
-          `${API_URL}/users/sub/${channel._id}`,
-          {},
-          { withCredentials: true }
+        await axiosInstance.put(
+          `/users/sub/${channel._id}`
         );
         setChannel((prevChannel) => ({
           ...prevChannel,
@@ -251,6 +249,10 @@ const Video = () => {
   };
 
   const handleShare = () => {};
+  
+  const handleSave = ()=>{
+    setSave(true)
+  }
 
   const handleVideoDelete = async () => {
     try {
@@ -261,9 +263,7 @@ const Video = () => {
 
       deleteObject(videoRef)
         .then(async () => {
-          await axios.delete(`${API_URL}/videos/${currentVideo._id}`, {
-            withCredentials: true,
-          });
+          await axiosInstance.delete(`/videos/${currentVideo._id}`);
           setResp("Video Has Been Successfully Deleted");
           setVisible(true);
           navigate("/");
@@ -312,7 +312,7 @@ const Video = () => {
                 <Button>
                   <ReplyOutlinedIcon onClick={handleShare} /> Share
                 </Button>
-                <Button>
+                <Button onClick={handleSave}>
                   <AddTaskOutlinedIcon /> Save
                 </Button>
                 {allowDelete && (
@@ -365,6 +365,7 @@ const Video = () => {
       ) : (
         <Videoload />
       )}
+      {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible}/>)}
       {resp && <Notification message={resp} visible={visible} />}
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance.js";
 // import Videoload from '../components/loadComponent/Videoload.jsx'
 
 const Container = styled.div`
@@ -21,26 +22,21 @@ const Noticepara = styled.p`
 `;
 
 const Category = ({ category }) => {
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState([1]);
   const API_URL = process.env.REACT_APP_API_URI;
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
         if (category === "history") {
-          const res = await axios.get(`${API_URL}/videos/history`, {
-            withCredentials: true,
-          });
+          const res = await axiosInstance.get(`/videos/history`);
           if (res && res.data && Array.isArray(res.data)) {
             setVideos(res.data);
           } else {
             setVideos([]);
           }
         } else {
-          const res = await axios.get(
-            `${API_URL}/videos/category/${category}`,
-            { withCredentials: true }
-          );
+          const res = await axiosInstance.get(`/videos/category/${category}`);
           if (res && res.data && Array.isArray(res.data)) {
             setVideos(res.data);
           } else {

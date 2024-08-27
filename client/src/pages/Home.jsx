@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance.js";
+import { useLocation } from "react-router-dom";
 // import Videoload from '../components/loadComponent/Videoload.jsx'
 
 const Container = styled.div`
@@ -21,20 +22,30 @@ const Noticepara = styled.p`
 `;
 
 const Home = ({ type }) => {
-  const [videos, setVideos] = useState([]);
-  const API_URL = process.env.REACT_APP_API_URI;
-  
+  const [videos, setVideos] = useState([1]);
+  const path = useLocation().pathname.split("/")[2]
+
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`${API_URL}/videos/${type}`,{withCredentials:true});
-        if (res && res.data && Array.isArray(res.data)) {
-          setVideos(res.data);
+        if (type === "playlist") { 
+          const res = await axiosInstance.get(`/playlist/get/${path}`)
+          if (res && res.data && Array.isArray(res.data)) {
+            setVideos(res.data);
+          } else {
+            setVideos([]);
+          }
         } else {
-          setVideos([]);
+          const res = await axiosInstance.get(`/videos/${type}`);
+          if (res && res.data && Array.isArray(res.data)) {
+            setVideos(res.data);
+          } else {
+            setVideos([]);
+          }
         }
       } catch (err) {
-        console.log(err);
+        if (err.response.data.message === "Token Is Not Valid!!")
+          console.log(err);
         setVideos([]);
       }
     };

@@ -10,6 +10,7 @@ import { app } from "../firebaseConfig.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div`
   width: 100%;
@@ -195,7 +196,7 @@ function Upload() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const res = await axios.post(`${API_URL}/videos`, { ...inputs, tags, category },{withCredentials:true});
+    const res = await axiosInstance.post(`/videos`, { ...inputs, tags, category });
     res.status === 200 && navigate(`/video/${res.data._id}`);
     setImg(undefined)
     setImgPerc(0)

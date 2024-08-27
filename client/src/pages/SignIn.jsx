@@ -6,6 +6,10 @@ import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import Notification from "../components/Notification.jsx";
 import validator from "validator";
+import axiosInstance from "../utils/axiosInstance.js";
+import InfoIcon from "@mui/icons-material/InfoOutlined.js";
+import Visibility from "@mui/icons-material/Visibility.js";
+import VisibilityOff from "@mui/icons-material/VisibilityOff.js";
 
 const Container = styled.div`
   display: flex;
@@ -14,9 +18,15 @@ const Container = styled.div`
   justify-content: center;
   height: calc(100vh - 56px);
   color: ${({ theme }) => theme.text};
-  overflow-x: hidden;
+  padding: 20px; /* Add padding for smaller screens */
+
+  @media (max-width: 768px) {
+    height: auto; /* Adjust height for mobile screens */
+    padding: 20px; /* Add padding for smaller screens */
+  }
 `;
 
+// Wrapper styles
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -27,17 +37,36 @@ const Wrapper = styled.div`
   gap: 10px;
   width: 100%;
   max-width: 500px;
+
+  @media (max-width: 768px) {
+    padding: 20px; /* Reduce padding for mobile screens */
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px; /* Further reduce padding for very small screens */
+  }
 `;
 
+// Title styles
 const Title = styled.h1`
   font-size: 24px;
+
+  @media (max-width: 480px) {
+    font-size: 20px; /* Reduce font size on small screens */
+  }
 `;
 
+// SubTitle styles
 const SubTitle = styled.h2`
   font-size: 20px;
   font-weight: 300;
+
+  @media (max-width: 480px) {
+    font-size: 18px; /* Reduce font size on small screens */
+  }
 `;
 
+// Input styles
 const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
   border-radius: 3px;
@@ -45,8 +74,13 @@ const Input = styled.input`
   background-color: transparent;
   width: 100%;
   color: ${({ theme }) => theme.text};
+
+  @media (max-width: 480px) {
+    padding: 8px; /* Adjust padding for smaller screens */
+  }
 `;
 
+// Button styles
 const Button = styled.button`
   border-radius: 3px;
   border: none;
@@ -55,42 +89,89 @@ const Button = styled.button`
   cursor: pointer;
   background-color: ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.textSoft};
+
+  @media (max-width: 480px) {
+    padding: 8px 16px; /* Adjust padding for smaller screens */
+  }
 `;
 
+// More, Links, and Link styles
 const More = styled.div`
   display: flex;
   margin-top: 10px;
   font-size: 12px;
   color: ${({ theme }) => theme.textSoft};
+
+  @media (max-width: 480px) {
+    font-size: 10px; /* Adjust font size for smaller screens */
+  }
 `;
 
 const Links = styled.div`
   margin-left: 50px;
+
+  @media (max-width: 480px) {
+    margin-left: 20px; /* Adjust margin for smaller screens */
+  }
 `;
 
 const Link = styled.span`
   margin-left: 30px;
+
+  @media (max-width: 480px) {
+    margin-left: 15px; /* Adjust margin for smaller screens */
+  }
 `;
 
+// InputWrapper styles
 const InputWrapper = styled.div`
-  width: 104%;
+  width: 105%;
   gap: 10px;
   display: flex;
   justify-content: space-between;
-  /* margin: 10px; */
+  align-items: center;
+  position: relative;
+
+  @media (max-width: 480px) {
+    flex-direction: column; /* Stack elements vertically on small screens */
+    gap: 5px;
+  }
 `;
 
-const Small = styled.button`
-  /* flex: 1; */
-  border-radius: 3px;
-  /* margin-left: 10px; */
-  border: none;
-  /* padding: 10px 10px; */
-  font-weight: 500;
-  cursor: pointer;
-  min-width: 80px;
-  background-color: ${({ theme }) => theme.soft};
-  color: ${({ theme }) => theme.textSoft};
+const Inputtag = styled.div`
+  width: 86%;
+  /* height: 100%; */
+  position: relative;
+`;
+
+// Info styles
+const Info = styled.div`
+  width: 50%;
+  padding: 20px 15px;
+  color: ${({ theme }) => theme.bg};
+  background-color: ${({ theme }) => theme.textSoft};
+  border-radius: 20px;
+  position: absolute;
+  right: -25%;
+  top: 2.5rem;
+
+  li {
+    padding: 2px 0;
+  }
+
+  @media (max-width: 768px) {
+    width: 70%;
+    right: -10%;
+    top: 2.5rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 10px;
+  }
 `;
 
 const SignIn = () => {
@@ -105,7 +186,9 @@ const SignIn = () => {
   const [orgcode, setorgCode] = useState("");
   const [verify, setVerify] = useState(false);
   const [details, setDetails] = useState({ name: "", email: "", password: "" });
-  const API_URL = process.env.REACT_APP_API_URI;
+  const [send, setSend] = useState("Send Code");
+  const [info, setInfo] = useState(false);
+  const [passawail, setPassawail] = useState(false);
 
   const user = (e) => {
     const { name, value } = e.target;
@@ -115,6 +198,7 @@ const SignIn = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false);
+      setResp("");
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -124,19 +208,20 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      await axios
-        .post(`${API_URL}/auth/signin`, {
+      await axiosInstance
+        .post(`/auth/signin`, {
           name: details.name,
           password: details.password,
-        },{withCredentials:true})
+        })
         .then((res) => {
           console.log(res);
           dispatch(loginSuccess(res.data));
           setResp("Successfully Logged In");
           setVisible(true);
-          navigate("/",);
+          navigate("/");
         });
     } catch (resp) {
+      console.log(resp);
       setResp(resp.response.data.message);
       setVisible(true);
       dispatch(loginFailure());
@@ -158,21 +243,23 @@ const SignIn = () => {
     e.preventDefault();
     try {
       if (validatePassword(details.password) && verify) {
-        await axios
-          .post(`${API_URL}/auth/signup`, {
+        await axiosInstance
+          .post(`/auth/signup`, {
             name: details.name,
             password: details.password,
             email: details.email,
-          },{withCredentials:true})
+          })
           .then((res) => {
             setResp(res.data);
             setVisible(true);
           });
       } else {
+        setSend(true);
         throw new Error("Enter Valid Password Or Verify Mail");
       }
     } catch (err) {
-      setResp(err.response.data.message);
+      setSend(true);
+      // setResp(err);
       setVisible(true);
     }
   };
@@ -183,15 +270,18 @@ const SignIn = () => {
         setResp("Enter Valid Details");
         setVisible(true);
       } else {
-        const res = await axios.post(`${API_URL}/auth/getcode`, {
+        setSend("Sending...");
+        const res = await axiosInstance.post(`/auth/getcode`, {
           email: details.email,
           name: details.name,
-        },{withCredentials:true});
+        });
         setorgCode(res.data.code);
         setResp("Code Is Sended To Your Mail");
         setVisible(true);
+        setSend("Resend");
       }
     } catch (err) {
+      setSend("Resend");
       setResp(err.response.data.message);
       setVisible(true);
     }
@@ -225,13 +315,40 @@ const SignIn = () => {
           name="name"
           onChange={user}
         />
-        <Input
-          type="password"
-          value={details.password}
-          placeholder="password"
-          name="password"
-          onChange={user}
-        />
+        <InputWrapper>
+          <Input
+            type={passawail?"text":"password"}
+            value={details.password}
+            placeholder="password"
+            name="password"
+            onChange={user}
+          />
+          {passawail ? (
+            <VisibilityOff
+              style={{
+                fontSize: "25px",
+                position: "absolute",
+                right: "5px",
+                top: "50%",
+                cursor: "pointer",
+                transform: "translateY(-50%)",
+              }}
+              onClick={() => setPassawail(!passawail)}
+            />
+          ) : (
+            <Visibility
+              style={{
+                fontSize: "25px",
+                position: "absolute",
+                right: "5px",
+                top: "50%",
+                cursor: "pointer",
+                transform: "translateY(-50%)",
+              }}
+              onClick={() => setPassawail(!passawail)}
+            />
+          )}
+        </InputWrapper>
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
         <Title>Sign Up</Title>
@@ -249,7 +366,13 @@ const SignIn = () => {
             name="email"
             onChange={user}
           />
-          <Small onClick={getCode}>Get Code</Small>
+          <Button
+            onClick={getCode}
+            disabled={send === "Sending..."}
+            style={{ width: "150px" }}
+          >
+            {send}
+          </Button>
         </InputWrapper>
         <InputWrapper>
           <Input
@@ -261,13 +384,65 @@ const SignIn = () => {
             Verify Code
           </Button>
         </InputWrapper>
-        <Input
-          type="password"
-          value={details.password}
-          name="password"
-          placeholder="password"
-          onChange={user}
-        />
+        <InputWrapper>
+          <Inputtag>
+            <Input
+              type={passawail ? "text" : "password"}
+              value={details.password}
+              name="password"
+              placeholder="password"
+              onChange={user}
+            />
+            {passawail ? (
+              <VisibilityOff
+                style={{
+                  fontSize: "25px",
+                  position: "absolute",
+                  right: "-15px",
+                  top: "50%",
+                  cursor: "pointer",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={() => setPassawail(!passawail)}
+              />
+            ) : (
+              <Visibility
+                style={{
+                  fontSize: "25px",
+                  position: "absolute",
+                  right: "-15px",
+                  top: "50%",
+                  cursor: "pointer",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={() => setPassawail(!passawail)}
+              />
+            )}
+          </Inputtag>
+          <InfoIcon
+            style={{
+              fontSize: "25px",
+              color: "yellowgreen",
+              position: "relative",
+              cursor: "pointer",
+            }}
+            onClick={() => setInfo(!info)}
+          />
+          {info && (
+            <>
+              <Info>
+                <li>Must be at least 8 characters long.</li>
+                <li>Must contain at least one uppercase letter (A-Z).</li>
+                <li>Must contain at least one lowercase letter (a-z).</li>
+                <li>Must include at least one numeric digit (0-9).</li>
+                <li>
+                  Must include at least one special character from the
+                  following: ! @ # $ % ^ & *.
+                </li>
+              </Info>
+            </>
+          )}
+        </InputWrapper>
         <Button
           onClick={handleRegister}
           disabled={!details.name || !details.password || !details.email}

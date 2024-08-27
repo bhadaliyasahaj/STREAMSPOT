@@ -181,10 +181,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
           </Item>
         </Link>
         <Hr />
-        <Item>
-          <VideoLibraryOutlinedIcon />
-          <Text>Library</Text>
-        </Item>
+        <Link to="playlist" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item active={location.pathname === "/playlist"}>
+            <VideoLibraryOutlinedIcon />
+            <Text>Playlists</Text>
+          </Item>
+        </Link>
         <Link to="history" style={{ textDecoration: "none", color: "inherit" }}>
           <Item active={location.pathname === "/history"}>
             <HistoryOutlinedIcon />

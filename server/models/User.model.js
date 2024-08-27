@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import JWT from 'jsonwebtoken'
 
 const UserSchema = new mongoose.Schema(
   {
@@ -24,8 +25,7 @@ const UserSchema = new mongoose.Schema(
       default: 0,
     },
     subscribedUsers: {
-      type: [String],
-      unique: true,
+      type:[String],
     },
     history: {
       type: [String],
@@ -34,4 +34,19 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+UserSchema.methods.createAccessToken=function(){
+  const payload = {id:this._id,username:this.name};
+  const option = {expiresIn:"1d"}
+
+  const accesstoken = JWT.sign(payload,process.env.ACCESS_SECRETKEY,option)
+  return accesstoken
+}
+
+UserSchema.methods.createRefreshToken=function(){
+  const payload = {id:this._id};
+  const option = {expiresIn:"2d"}
+
+  const refreshtoken = JWT.sign(payload,process.env.REFRESH_SECRETKEY,option)
+  return refreshtoken
+}
 export default mongoose.model("User", UserSchema);

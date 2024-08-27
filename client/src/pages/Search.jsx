@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Card from "../components/Card";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ function Search() {
       setQAvail(false);
     } else {
       const fetchVideos = async () => {
-        const res = await axios.get(`${API_URL}/videos/search${query}`,{withCredentials:true});
+        const res = await axiosInstance.get(`/videos/search${query}`);
         setVideos(res.data);
         setQAvail(true);
       };

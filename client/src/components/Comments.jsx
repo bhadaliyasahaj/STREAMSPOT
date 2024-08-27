@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import Person from "@mui/icons-material/Person";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const Container = styled.div``;
 
@@ -52,10 +53,10 @@ const Comments = ({ videoId }) => {
   };
 
   const handlePostButton = async () => {
-    const res = await axios.post(`${API_URL}/comments/`, {
+    const res = await axiosInstance.post(`/comments/`, {
       desc: newcomm,
       videoID: videoId,
-    },{withCredentials:true});
+    });
     setNewComm("");
     setComments((prev) => [...prev, res.data]);
     setFocus(false);
@@ -68,7 +69,7 @@ const Comments = ({ videoId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`${API_URL}/comments/${videoId}`,{withCredentials:true});
+        const res = await axiosInstance.get(`/comments/${videoId}`);
         setComments(res.data);
       } catch (error) {
         console.log(error);
