@@ -195,14 +195,6 @@ const SignIn = () => {
     setDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-      setResp("");
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [visible]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -458,7 +450,7 @@ const SignIn = () => {
           <Link>Terms</Link>
         </Links>
       </More>
-      {resp && <Notification message={resp} visible={visible} />}
+      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
     </Container>
   );
 };

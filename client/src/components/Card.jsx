@@ -16,7 +16,6 @@ const Container = styled.div`
   display: ${(props) => props.type === "sm" && "flex"};
   gap: 10px;
   position: relative;
-
   @media (max-width: 768px) {
     width: 300px;
   }
@@ -31,6 +30,7 @@ const Image = styled.img`
 `;
 
 const Details = styled.div`
+  width: ${(props) => props.type === "sm" ? "100%":"90%"};
   display: flex;
   margin-top: ${(props) => props.type !== "sm" && "5px"};
   gap: 12px;
@@ -56,7 +56,7 @@ const Title = styled.h1`
 const ChannelName = styled.h2`
   font-size: 14px;
   color: ${({ theme }) => theme.textSoft};
-  margin: 9px 0px;
+  margin: 5px 0px;
 `;
 
 const Info = styled.div`
@@ -65,9 +65,9 @@ const Info = styled.div`
 `;
 
 const MoreContainer = styled.div`
+display: ${(props)=>props.type?"flex":"none"};
 position: absolute;
 right: 0;
-display: flex;
 justify-content: center;
 flex-direction: column;
 align-items: center;
@@ -197,7 +197,7 @@ const Card = ({ type, video, removed, onRemove }) => {
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
           <Container type={type}>
             <Image type={type} src={video.imgUrl} />
-            <MoreContainer enremove={enremove}>
+            <MoreContainer enremove={enremove} type={type!=="sm"}>
               <More className="more-icon" onClick={handleMore} />
               <Info className="delete-option">
                 <List enable={!isPlaylistPage} onClick={handleSave}>Save</List>
