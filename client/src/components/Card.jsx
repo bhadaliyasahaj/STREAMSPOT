@@ -1,11 +1,13 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import PersonIcon from "@mui/icons-material/Person";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
 import Homeload from "./loadComponent/Homeload";
-import axiosInstance from "../utils/axiosInstance.js"
+import axiosInstance from "../utils/axiosInstance.js";
+import More from "@mui/icons-material/MoreVert.js";
+import Playlistpopup from "./Playlistpopup.jsx";
+import Notification from "./Notification.jsx";
 
 const Container = styled.div`
   width: ${(props) => props.type !== "sm" && "300px"};
@@ -13,14 +15,15 @@ const Container = styled.div`
   cursor: pointer;
   display: ${(props) => props.type === "sm" && "flex"};
   gap: 10px;
+  position: relative;
 
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     width: 300px;
   }
 `;
 
 const Image = styled.img`
-  width: ${(props) => props.type !== "sm" ? "100%":"100px"};
+  width: ${(props) => (props.type !== "sm" ? "100%" : "100px")};
   height: ${(props) => (props.type === "sm" ? "120px" : "200px")};
   background-color: #999;
   border-radius: 20px;
@@ -61,22 +64,85 @@ const Info = styled.div`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-const Card = ({ type, video }) => {
+const MoreContainer = styled.div`
+position: absolute;
+right: 0;
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center;
+  .more-icon {
+    /* position: absolute; */
+    color: white;
+    /* bottom: 40px; */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+    padding: 5px;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  .delete-option {
+    display: ${(props) => (props.enremove ? "block" : "none")};
+    position: absolute;
+    top: 100%; 
+    background-color: #333;
+    color: white;
+    padding: 7px 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+`;
+
+const List = styled.li`
+      display: ${(props) => (props.enable ? "block" : "none")};
+      list-style: none;
+      border-bottom: 1px solid;
+      padding: 3px 10px;
+      border-radius: 1.5px;
+`
+
+const Card = ({ type, video, removed, onRemove }) => {
   const [channel, setChannel] = useState({});
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(true);
-  const API_URL = process.env.REACT_APP_API_URI;
-  
+  const [enremove, setEnremove] = useState(false);
+  const location = useLocation();
+  const [visible, setVisible] = useState(false);
+  const [resp, setResp] = useState("");
+  const [save, setSave] = useState(false);
+
+
+
   useEffect(() => {
     const fetchChannel = async () => {
-      await axiosInstance.get(`/users/find/${video.userId}`).then((res) => {
+      console.log(video.userId);
+      try {
+        const res = await axiosInstance.get(`/users/find/${video.userId}`);
         setChannel(res.data);
+        console.log(res.data);
         setLoading(false);
         setTitle(vidtitle(video.title));
-      });
+      } catch (err) {
+        setLoading(false);
+        // console.log(err);
+      }
     };
-    fetchChannel();
-  }, [video.userId]);
+    if (video) {
+      fetchChannel();
+    } else {
+      setLoading(false);
+    }
+  }, [video]);
 
   const vidtitle = (str) => {
     if (type !== "sm") {
@@ -92,14 +158,52 @@ const Card = ({ type, video }) => {
     }
   };
 
+  const handleDelete = async (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      const playlistid = location.pathname.split("/")[2];
+      await axiosInstance.put("/playlist/remove", {
+        vidid: id,
+        plid: playlistid,
+      });
+      onRemove(id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const isPlaylistPage = location.pathname.split("/")[1] === "playlist";
+
+
+  const handleMore = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setEnremove(!enremove);
+    console.log(isPlaylistPage);
+  };
+
+  const handleSave = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSave(true)
+  }
+
   return (
     <>
       {loading ? (
-        <Homeload type={type}/>
-      ) : (
+        <Homeload type={type} />
+      ) : !removed ? (
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
           <Container type={type}>
             <Image type={type} src={video.imgUrl} />
+            <MoreContainer enremove={enremove}>
+              <More className="more-icon" onClick={handleMore} />
+              <Info className="delete-option">
+                <List enable={!isPlaylistPage} onClick={handleSave}>Save</List>
+                <List enable={isPlaylistPage} onClick={(e) => handleDelete(e, video._id)} >UnSave</List>
+              </Info>
+            </MoreContainer>
             <Details type={type}>
               {type !== "sm" &&
                 (channel.img ? (
@@ -126,7 +230,25 @@ const Card = ({ type, video }) => {
             </Details>
           </Container>
         </Link>
+      ) : (
+        <Container>
+          <Image />
+          <MoreContainer enremove={enremove}>
+            <More className="more-icon" onClick={handleMore} style={{bottom:"10px"}}/>
+            <Info className="delete-option">
+              <List enable={!isPlaylistPage} onClick={handleSave}>Save</List>
+              <List enable={isPlaylistPage} onClick={(e) => handleDelete(e, video.id)} >UnSave</List>
+            </Info>
+          </MoreContainer>
+          <Details style={{ justifyContent: "space-evenly" }}>
+            <Texts>
+              <Title>Removed By Owner</Title>
+            </Texts>
+          </Details>
+        </Container>
       )}
+      {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible} vidId={video._id} />)}
+      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
     </>
   );
 };

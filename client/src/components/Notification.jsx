@@ -50,7 +50,15 @@ const Wraper = styled.div`
   font-weight: bold;
 `;
 
-function Notification({ message, visible }) {
+function Notification({ message, visible, setVisible }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [visible]);
+
   return (
     <Container visible={visible}>
       <Wraper>{message}</Wraper>

@@ -6,13 +6,16 @@ import Homeload from "./loadComponent/Homeload";
 import axiosInstance from "../utils/axiosInstance.js";
 import PlaylistPlay from "@mui/icons-material/PlaylistPlay.js";
 import Playlistload from "./loadComponent/Playlistload.jsx";
+import More from "@mui/icons-material/MoreVert.js";
 
 const Container = styled.div`
-  width: 300px;
+  width: 240px;
   /* margin-bottom: 45px; */
   cursor: pointer;
   /* display: ${(props) => props.type === "sm" && "flex"}; */
   gap: 10px;
+  position: relative;
+  /* border: 2px solid black; */
 
   @media (max-width: 768px) {
     width: 300px;
@@ -20,7 +23,7 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  width: 240px;
+  width: 100%;
   height: 160px;
   border-radius: 20px;
   background-color: #999;
@@ -29,14 +32,14 @@ const Image = styled.img`
 `;
 
 const Details = styled.div`
-  display: flex;
-  margin-top: ${(props) => props.type !== "sm" && "5px"};
-  gap: 12px;
-  flex: 1;
+  margin-top: 10px;
 `;
 
 
 const Texts = styled.div`
+display: flex;
+flex-direction: column;
+gap: 5px;
   /* border:2px solid black; */
   padding: 0 15px;
 `;
@@ -66,6 +69,11 @@ const Title = styled.h1`
   color: ${({ theme }) => theme.text};
 `;
 
+const Info = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.textSoft};
+`;
+
 
 const PlaylistsContainer = styled.div`
   display: flex;
@@ -78,10 +86,59 @@ const Noticepara = styled.p`
   color: ${({ theme }) => theme.textSoft};
 `;
 
+const MoreContainer = styled.div`
+position: absolute;
+right: 0;
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center;
+  .more-icon {
+    /* position: absolute; */
+    color: white;
+    /* bottom: 40px; */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+    padding: 5px;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  .delete-option {
+    display: ${(props) => (props.enremove ? "block" : "none")};
+    position: absolute;
+    top: 100%; 
+    background-color: #333;
+    color: white;
+    padding: 7px 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+`;
+
+const List = styled.li`
+      /* display: ${(props) => (props.enable ? "block" : "none")}; */
+      list-style: none;
+      border-bottom: 1px solid;
+      padding: 3px 10px;
+      border-radius: 1.5px;
+`
+
 const Playlist = () => {
   const [loading, setLoading] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [image, setImage] = useState([]);
+  const [activelist, setActivelist] = useState("");
+
 
   useEffect(() => {
     const getPlaylists = async () => {
@@ -101,25 +158,57 @@ const Playlist = () => {
     getPlaylists();
   }, []);
 
+  const handleRemove = async (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    // console.log(id);
+    try {
+      const res = await axiosInstance.delete(`/playlist/deletelist/${id}`)
+      console.log(res.data);
+      setPlaylists((prev) => prev.filter((list) => list._id !== id))
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  const handleMore = (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setActivelist((prev) => prev === id ? null : id)
+    // console.log(isPlaylistPage);
+  };
+
+
   return (
     <>
       <PlaylistsContainer>
-        {playlists.map((item, index) => (
-          loading ? (<Playlistload />) : (playlists.length > 0 ? (
+        {playlists.length > 0 ? (playlists.map((item, index) => (
+          loading ? (<Playlistload />) : (
             <Link to={`/playlist/${item._id}`} style={{ textDecoration: "none" }} key={item._id}>
               <Container>
                 <ImageContainer>
                   <PlaylistPlay style={{ position: "absolute", fontSize: "50px", color: "white" }} />
                   <Image src={image[index]} />
                 </ImageContainer>
+                <MoreContainer enremove={activelist === item._id}>
+                  <More className="more-icon" onClick={(e) => handleMore(e, item._id)} style={{ bottom: "10px" }} />
+                  <div className="delete-option">
+                    <List onClick={(e) => handleRemove(e, item._id)}>Remove</List>
+                  </div>
+                </MoreContainer>
                 <Details>
                   <Texts>
                     <Title>{item.name.toUpperCase()}</Title>
+                    <Info>
+                      Updated {format(item.updatedAt)}
+                    </Info>
                   </Texts>
                 </Details>
               </Container>
-            </Link>) : (<Noticepara>No Playlist Found</Noticepara>))
-        ))}
+            </Link>)
+        ))) : (<Noticepara>No Playlist Found</Noticepara>)}
       </PlaylistsContainer>
     </>
   );

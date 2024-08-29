@@ -182,7 +182,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Link>
         <Hr />
         <Link to="playlist" style={{ textDecoration: "none", color: "inherit" }}>
-          <Item active={location.pathname === "/playlist"}>
+          <Item active={location.pathname.split("/")[1] === "playlist"}>
             <VideoLibraryOutlinedIcon />
             <Text>Playlists</Text>
           </Item>

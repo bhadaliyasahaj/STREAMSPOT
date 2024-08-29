@@ -165,14 +165,6 @@ const Video = () => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [visible]);
-
-  useEffect(() => {
     dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
@@ -195,12 +187,12 @@ const Video = () => {
         } else setAllowDelete(false);
 
         await axiosInstance.put(`/videos/view/${path}`);
-        if(currentUser){  
+        if (currentUser) {
           const res = await axiosInstance.put(`/users/history/${path}`);
-          console.log(res); 
+          // console.log(res); 
         }
 
-      
+
       } catch (error) {
         console.log(error);
       }
@@ -248,9 +240,9 @@ const Video = () => {
     }
   };
 
-  const handleShare = () => {};
-  
-  const handleSave = ()=>{
+  const handleShare = () => { };
+
+  const handleSave = () => {
     setSave(true)
   }
 
@@ -258,8 +250,8 @@ const Video = () => {
     try {
       const storage = getStorage(app);
 
-      const videoRef = ref(storage,`/users/${currentUser._id}/${decodeURIComponent(currentVideo.videoUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
-      const imgRef = ref(storage,`/users/${currentUser._id}/${decodeURIComponent(currentVideo.imgUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
+      const videoRef = ref(storage, `/users/${currentUser._id}/${decodeURIComponent(currentVideo.videoUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
+      const imgRef = ref(storage, `/users/${currentUser._id}/${decodeURIComponent(currentVideo.imgUrl).split("/").pop().split("?")[0].replace(/\s+/g, "")}`);
 
       deleteObject(videoRef)
         .then(async () => {
@@ -268,10 +260,10 @@ const Video = () => {
           setVisible(true);
           navigate("/");
         })
-        .catch((error) => {});
+        .catch((error) => { });
       deleteObject(imgRef)
-        .then(async () => {})
-        .catch((error) => {});
+        .then(async () => { })
+        .catch((error) => { });
     } catch (error) {
       console.log(error);
     }
@@ -293,7 +285,7 @@ const Video = () => {
               <Buttons>
                 <Button onClick={handleLike}>
                   {currentUser &&
-                  currentVideo.likes?.includes(currentUser._id) ? (
+                    currentVideo.likes?.includes(currentUser._id) ? (
                     <ThumbUpIcon />
                   ) : (
                     <ThumbUpOutlinedIcon />
@@ -302,7 +294,7 @@ const Video = () => {
                 </Button>
                 <Button onClick={handleDislike}>
                   {currentUser &&
-                  currentVideo.dislikes?.includes(currentUser._id) ? (
+                    currentVideo.dislikes?.includes(currentUser._id) ? (
                     <ThumbDownIcon />
                   ) : (
                     <ThumbDownOffAltOutlinedIcon />
@@ -350,11 +342,11 @@ const Video = () => {
                   </Description>
                 </ChannelDetail>
               </ChannelInfo>
-              <Subscribe onClick={handleSubscription} disabled={event==="sub"}>
-                {event!=="sub" ? (currentUser &&
-                currentUser.subscribedUsers?.includes(channel._id)
+              <Subscribe onClick={handleSubscription} disabled={event === "sub"}>
+                {event !== "sub" ? (currentUser &&
+                  currentUser.subscribedUsers?.includes(channel._id)
                   ? "SUBSCRIBED"
-                  : "SUBSCRIBE"):("SUBSCRIBING..")}
+                  : "SUBSCRIBE") : ("SUBSCRIBING..")}
               </Subscribe>
             </Channel>
             <Hr />
@@ -365,8 +357,8 @@ const Video = () => {
       ) : (
         <Videoload />
       )}
-      {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible}/>)}
-      {resp && <Notification message={resp} visible={visible} />}
+      {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible} vidId={currentVideo._id} />)}
+      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
     </>
   );
 };

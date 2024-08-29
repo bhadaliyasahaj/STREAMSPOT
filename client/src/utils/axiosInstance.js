@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         clearePersister();
         if (window.location.pathname !== "/signin") {
-          window.location.href = "/signin";
+          window.location.hash = "/signin";
         }
       }
     }

@@ -87,18 +87,18 @@ color: ${({ theme }) => theme.text};
 border: none;
 `
 
-function Playlistpopup({ setSave,setResp,setVisible }) {
+function Playlistpopup({ setSave,setResp,setVisible,vidId }) {
     const [playlists, setPlaylists] = useState([]);
     const [newPlaylist, setNewPlaylist] = useState('');
     const [active, setActive] = useState([]);
-    const location = useLocation()
+    
 
     useEffect(() => {
         const getPlaylists = async () => {
             try {
                 const res = await axiosInstance.get("/playlist/get")
                 console.log(res.data);
-                setPlaylists(res.data);
+                setPlaylists(res.data.playlists);
             } catch (err) {
                 console.log(err);
             }
@@ -110,10 +110,11 @@ function Playlistpopup({ setSave,setResp,setVisible }) {
     const handleCreatePlaylist = async () => {
         try {
             if (active.length > 0) {
-                const res = await axiosInstance.put(`/playlist/add/${location.pathname.split("/")[2]}`, active)
+                const res = await axiosInstance.put(`/playlist/add/${vidId}`, active)
                 console.log(res);
                 setResp("Playlist Updated")
                 setVisible(true)
+                setSave(false)
             } else {
                 const res = await axiosInstance.post("/playlist/create", { name: newPlaylist })
                 console.log(res);
@@ -124,7 +125,6 @@ function Playlistpopup({ setSave,setResp,setVisible }) {
             }
         } catch (err) {
             console.log(err);
-
         }
     };
 
@@ -142,7 +142,8 @@ function Playlistpopup({ setSave,setResp,setVisible }) {
                 <Close onClick={() => setSave(false)}>X</Close>
                 <Title>Select or Create Playlist</Title>
                 <PlaylistList>
-                    {playlists.map((playlist, index) => (
+
+                    {playlists.length>0 && playlists.map((playlist, index) => (
                         <PlaylistItem key={index} onClick={() => handleSelection(playlist._id)} active={active.includes(playlist._id)}>{playlist.name}</PlaylistItem>
                     ))}
                 </PlaylistList>
