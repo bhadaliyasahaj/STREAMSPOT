@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.methods.createAccessToken=function(){
   const payload = {id:this._id,username:this.name};
-  const option = {expiresIn:process.env.ACCESS_SECRETKEY_EXPIRY}
+  const option = {expiresIn:"1d"}
 
   const accesstoken = JWT.sign(payload,process.env.ACCESS_SECRETKEY,option)
   return accesstoken
@@ -46,7 +46,7 @@ UserSchema.methods.createAccessToken=function(){
 
 UserSchema.methods.createRefreshToken=function(){
   const payload = {id:this._id};
-  const option = {expiresIn:process.env.REFRESH_SECRETKEY_EXPIRY}
+  const option = {expiresIn:"2d"}
 
   const refreshtoken = JWT.sign(payload,process.env.REFRESH_SECRETKEY,option)
   return refreshtoken
