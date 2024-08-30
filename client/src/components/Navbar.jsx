@@ -5,8 +5,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOff";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { loginSuccess } from "../redux/userSlice";
+import { logout } from "../redux/userSlice";
 import Person from "@mui/icons-material/Person4";
 import axiosInstance from "../utils/axiosInstance.js";
 
@@ -79,13 +78,13 @@ const User = styled.div`
   color: ${({ theme }) => theme.text};
 `;
 
-const Avatar = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #999;
-  cursor: pointer;
-`;
+// const Avatar = styled.img`
+//   width: 32px;
+//   height: 32px;
+//   border-radius: 50%;
+//   background-color: #999;
+//   cursor: pointer;
+// `;
 
 const Cuser = styled.img`
   width: 32px;
@@ -127,10 +126,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URI;
 
   const handleAvatarClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -140,7 +137,7 @@ const Navbar = () => {
     // Implement logout logic here
     await axiosInstance.post(`/users/logout/${currentUser._id}`).then((res) => {
       console.log(res.data);
-      dispatch(loginSuccess(null));
+      dispatch(logout());
     });
     setDropdownOpen(false);
     navigate("/");

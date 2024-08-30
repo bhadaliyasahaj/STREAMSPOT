@@ -1,6 +1,7 @@
-import {persistor, store} from "./store"
+import {persistor, store} from "./store.js"
 
-export const clearePersister = ()=>{
-    persistor.purge()
-    store.dispatch({type:"RESET_STATE"})
+export const clearePersister = async () =>{
+    
+    await persistor.purge()
+    store.dispatch({type:"RESET_STATE"})    
 }

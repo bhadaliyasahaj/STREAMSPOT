@@ -38,6 +38,11 @@ export const userSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder)=> {
+    builder.addCase("RESET_STATE", () => {
+      return {...initialState}; 
+    })
+  },
 });
 
 export const { loginStart, loginSuccess, loginFailure, logout, subscription } =

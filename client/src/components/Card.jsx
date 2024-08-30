@@ -38,8 +38,8 @@ const Details = styled.div`
 `;
 
 const ChannelImage = styled.img`
-  width: 36px;
-  height: 36px;
+  min-width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #999;
   display: ${(props) => props.type === "sm" && "none"};
@@ -65,7 +65,7 @@ const Info = styled.div`
 `;
 
 const MoreContainer = styled.div`
-display: ${(props)=>props.type?"flex":"none"};
+display: ${(props)=>props.type!=="sm"?"flex":"none"};
 position: absolute;
 right: 0;
 justify-content: center;
@@ -197,7 +197,7 @@ const Card = ({ type, video, removed, onRemove }) => {
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
           <Container type={type}>
             <Image type={type} src={video.imgUrl} />
-            <MoreContainer enremove={enremove} type={type!=="sm"}>
+            <MoreContainer enremove={enremove} type={type}>
               <More className="more-icon" onClick={handleMore} />
               <Info className="delete-option">
                 <List enable={!isPlaylistPage} onClick={handleSave}>Save</List>

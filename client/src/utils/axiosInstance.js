@@ -28,8 +28,11 @@ axiosInstance.interceptors.response.use(
         error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axios.request(error.config);
       } catch (err) {
-        clearePersister();
         if (window.location.pathname !== "/signin") {
+          const clearing = async ()=>{
+            await clearePersister();
+          }
+          clearing()
           window.location.hash = "/signin";
         }
       }

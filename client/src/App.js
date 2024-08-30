@@ -41,7 +41,7 @@ function App() {
       try {
         await axiosInstance.get("/users/verify");
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     verifyUser();
