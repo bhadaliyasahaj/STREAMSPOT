@@ -246,12 +246,14 @@ const SignIn = () => {
             setVisible(true);
           });
       } else {
-        setSend(true);
+        // setSend(true);
         throw new Error("Enter Valid Password Or Verify Mail");
       }
     } catch (err) {
-      setSend(true);
-      // setResp(err);
+      // setSend(true);
+      console.log(err);
+      const msg = err.response?.data?.message||err.message;
+      setResp(msg);
       setVisible(true);
     }
   };
