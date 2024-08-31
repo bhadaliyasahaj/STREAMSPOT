@@ -231,20 +231,20 @@ const Video = () => {
     try {
       dispatch(subscription(channel._id));
       if (currentUser.subscribedUsers.includes(channel._id)) {
-        await axiosInstance.put(
-          `/users/unsub/${channel._id}`);
         setChannel((prevChannel) => ({
           ...prevChannel,
           subscribers: prevChannel.subscribers - 1,
         }));
-      } else {
         await axiosInstance.put(
-          `/users/sub/${channel._id}`
-        );
+          `/users/unsub/${channel._id}`);
+      } else {
         setChannel((prevChannel) => ({
           ...prevChannel,
           subscribers: prevChannel.subscribers + 1,
         }));
+        await axiosInstance.put(
+          `/users/sub/${channel._id}`
+        );
       }
     } catch (err) {
       dispatch(subscription(channel._id));
