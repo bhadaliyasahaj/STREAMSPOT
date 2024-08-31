@@ -111,7 +111,7 @@ const List = styled.li`
       border-radius: 1.5px;
 `
 
-const Card = ({ type, video, removed, onRemove }) => {
+const Card = ({ type, video, removed, onRemove, index }) => {
   const [channel, setChannel] = useState({});
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(true);
@@ -125,11 +125,10 @@ const Card = ({ type, video, removed, onRemove }) => {
 
   useEffect(() => {
     const fetchChannel = async () => {
-      console.log(video.userId);
+      // console.log(video.userId);
       try {
         const res = await axiosInstance.get(`/users/find/${video.userId}`);
         setChannel(res.data);
-        console.log(res.data);
         setLoading(false);
         setTitle(vidtitle(video.title));
       } catch (err) {
@@ -226,6 +225,9 @@ const Card = ({ type, video, removed, onRemove }) => {
                 <Info>
                   {video.views} views • {format(video.createdAt)}
                 </Info>
+                {index && <Info style={{marginTop:"5px"}}>
+                  #{index} on trending for {video.category}
+                </Info>}
               </Texts>
             </Details>
           </Container>

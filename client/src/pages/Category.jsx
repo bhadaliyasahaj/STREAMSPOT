@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
-import axios from "axios";
 import axiosInstance from "../utils/axiosInstance.js";
-// import Videoload from '../components/loadComponent/Videoload.jsx'
+import nProgress from 'nprogress'
 
 const Container = styled.div`
   display: flex;
@@ -12,8 +11,6 @@ const Container = styled.div`
   @media (max-width: 768px) {
     justify-content: center;
   }
-  /* height: 100vh;
-  overflow-y: scroll; */
 `;
 
 const Noticepara = styled.p`
@@ -22,11 +19,11 @@ const Noticepara = styled.p`
 `;
 
 const Category = ({ category }) => {
-  const [videos, setVideos] = useState([1]);
-  const API_URL = process.env.REACT_APP_API_URI;
+  const [videos, setVideos] = useState(null);
 
   useEffect(() => {
     const fetchVideos = async () => {
+      nProgress.start()
       try {
         if (category === "history") {
           const res = await axiosInstance.get(`/videos/history`);
@@ -47,13 +44,16 @@ const Category = ({ category }) => {
         console.log(err);
         setVideos([]);
       }
+      finally {
+        nProgress.done()
+      }
     };
     fetchVideos();
   }, [category]);
 
   return (
     <Container>
-      {videos.length > 0 ? (
+      {videos && (videos.length > 0 ? (
         videos.map((video) => {
           return <Card key={video._id} video={video} />;
         })
@@ -62,7 +62,7 @@ const Category = ({ category }) => {
           No {category.split("")[0].toUpperCase() + category.slice(1)} Videos
           Yet
         </Noticepara>
-      )}
+      ))}
     </Container>
   );
 };

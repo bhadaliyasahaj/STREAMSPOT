@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice.js";
@@ -10,6 +9,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import InfoIcon from "@mui/icons-material/InfoOutlined.js";
 import Visibility from "@mui/icons-material/Visibility.js";
 import VisibilityOff from "@mui/icons-material/VisibilityOff.js";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   display: flex;
@@ -197,6 +197,7 @@ const SignIn = () => {
 
 
   const handleLogin = async (e) => {
+    nProgress.start()
     e.preventDefault();
     dispatch(loginStart());
     try {
@@ -217,6 +218,9 @@ const SignIn = () => {
       setResp(resp.response.data.message);
       setVisible(true);
       dispatch(loginFailure());
+    }
+    finally{
+      nProgress.done()
     }
   };
 

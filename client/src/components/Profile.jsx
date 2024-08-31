@@ -8,12 +8,11 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { app } from "../firebaseConfig.js";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import Person from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../redux/userSlice.js";
 import axiosInstance from "../utils/axiosInstance.js";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +34,8 @@ const Wrapper = styled.div`
 `;
 
 const ImageSection = styled.div`
-  flex: 1.5;
+  /* flex: 1.5; */
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +44,8 @@ const ImageSection = styled.div`
 `;
 
 const DetailsSection = styled.div`
-  flex: 2;
+  /* flex: 2; */
+  width: 50%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -85,24 +86,24 @@ const Label = styled.label`
 const Image = styled.img`
   width: 100%;
   height: 100%;
-  transform: scale(1.5);
+  /* transform: scale(1); */
 `;
 
 const ImageContainer = styled.div`
   width: 50%;
-  height: 50%;
+  height: 60%;
   border: 2px solid ${({ theme }) => theme.hard};
-  border-radius: 30%;
+  border-radius: 10%;
   overflow: hidden;
 `;
 
 function Profile() {
+  nProgress.start()
   const [img, setImg] = useState(undefined);
   const [imgurl, setImgUrl] = useState("");
   const [imgPerc, setImgPerc] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const API_URL = process.env.REACT_APP_API_URI;
 
   const uploadFile = (file, urlType) => {
     if (!file) return;
@@ -187,7 +188,7 @@ function Profile() {
       }
     }
   };
-
+  nProgress.done()
   return (
     <Container>
       <Wrapper>

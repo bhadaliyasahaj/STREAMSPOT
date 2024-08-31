@@ -7,18 +7,13 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../firebaseConfig.js";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axiosInstance from "../utils/axiosInstance.js";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   width: 100%;
-  /* height: 100%; */
-  /* position: absolute;
-  top: 0;
-  left: 0; */
-  /* background-color: #0000004c; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,9 +115,7 @@ function Upload() {
   const [category, setCategory] = useState('');
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
-  const {currentUser} = useSelector((state)=>state.user)
-  
-  const API_URL = process.env.REACT_APP_API_URI;
+  const { currentUser } = useSelector((state) => state.user)
 
   const navigate = useNavigate();
 
@@ -196,13 +189,21 @@ function Upload() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const res = await axiosInstance.post(`/videos`, { ...inputs, tags, category });
-    res.status === 200 && navigate(`/video/${res.data._id}`);
-    setImg(undefined)
-    setImgPerc(0)
-    setVideo(undefined)
-    setVideoPerc(0)
-    setInputs({})
+    nProgress.start()
+    try {
+      const res = await axiosInstance.post(`/videos`, { ...inputs, tags, category });
+      setImg(undefined)
+      setImgPerc(0)
+      setVideo(undefined)
+      setVideoPerc(0)
+      setInputs({})
+      res.status === 200 && navigate(`/video/${res.data._id}`);
+    }catch(err){
+      console.log(err);
+    }
+    finally{
+      nProgress.done()
+    }
   };
 
   return (
@@ -271,7 +272,7 @@ function Upload() {
         )}
         <Button
           onClick={handleUpload}
-          disabled={!inputs.videoUrl || !inputs.imgUrl || !setCategory}
+          disabled={!inputs.videoUrl || !inputs.imgUrl || !setCategory || nProgress.isStarted()}
         >
           Upload
         </Button>

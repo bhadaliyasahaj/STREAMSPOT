@@ -21,6 +21,7 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 import { app } from "../firebaseConfig.js";
 import axiosInstance from "../utils/axiosInstance.js";
 import Playlistpopup from "../components/Playlistpopup.jsx";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   display: flex;
@@ -165,6 +166,7 @@ const Video = () => {
   };
 
   useEffect(() => {
+    nProgress.start()
     dispatch(fetchSuccess(null));
     const fetchData = async () => {
       try {
@@ -196,26 +198,38 @@ const Video = () => {
       } catch (error) {
         console.log(error);
       }
+      finally {
+        nProgress.done()
+      }
     };
     fetchData();
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axiosInstance.put(
-      `/users/like/${currentVideo._id}`);
-    dispatch(like(currentUser._id));
+    try {
+      dispatch(like(currentUser._id));
+      await axiosInstance.put(
+        `/users/like/${currentVideo._id}`);
+    } catch (err) {
+      dispatch(like(currentUser._id))
+    }
   };
 
   const handleDislike = async () => {
-    await axiosInstance.put(
-      `/users/dislike/${currentVideo._id}`);
-    dispatch(dislike(currentUser._id));
+    try {
+      dispatch(dislike(currentUser._id));
+      await axiosInstance.put(
+        `/users/dislike/${currentVideo._id}`);
+    } catch (err) {
+      dispatch(dislike(currentUser._id))
+    }
   };
 
   const handleSubscription = async () => {
     if (event === "sub") return;
     setEvent("sub");
     try {
+      dispatch(subscription(channel._id));
       if (currentUser.subscribedUsers.includes(channel._id)) {
         await axiosInstance.put(
           `/users/unsub/${channel._id}`);
@@ -232,8 +246,8 @@ const Video = () => {
           subscribers: prevChannel.subscribers + 1,
         }));
       }
-      dispatch(subscription(channel._id));
     } catch (err) {
+      dispatch(subscription(channel._id));
       console.log(err);
     } finally {
       setEvent("");
@@ -247,6 +261,7 @@ const Video = () => {
   }
 
   const handleVideoDelete = async () => {
+    nProgress.start()
     try {
       const storage = getStorage(app);
 
@@ -255,17 +270,21 @@ const Video = () => {
 
       deleteObject(videoRef)
         .then(async () => {
+        })
+        .catch((error) => { });
+      deleteObject(imgRef)
+        .then(async () => { 
           await axiosInstance.delete(`/videos/${currentVideo._id}`);
           setResp("Video Has Been Successfully Deleted");
           setVisible(true);
           navigate("/");
         })
         .catch((error) => { });
-      deleteObject(imgRef)
-        .then(async () => { })
-        .catch((error) => { });
     } catch (error) {
       console.log(error);
+    }
+    finally {
+      nProgress.done()
     }
   };
 
@@ -283,22 +302,22 @@ const Video = () => {
                 {currentVideo.views} views • {format(currentVideo.createdAt)}
               </Info>
               <Buttons>
-                <Button onClick={handleLike}>
+                <Button onClick={handleLike} aria-disabled={!currentUser}>
                   {currentUser &&
                     currentVideo.likes?.includes(currentUser._id) ? (
                     <ThumbUpIcon />
                   ) : (
-                    <ThumbUpOutlinedIcon />
-                  )}{" "}
+                    <ThumbUpOutlinedIcon titleAccess="I Like It" />
+                  )}
                   {currentVideo.likes?.length}
                 </Button>
-                <Button onClick={handleDislike}>
+                <Button onClick={handleDislike} aria-disabled={!currentUser}>
                   {currentUser &&
                     currentVideo.dislikes?.includes(currentUser._id) ? (
                     <ThumbDownIcon />
                   ) : (
-                    <ThumbDownOffAltOutlinedIcon />
-                  )}{" "}
+                    <ThumbDownOffAltOutlinedIcon titleAccess="I Dislike It" />
+                  )}
                   Dislike
                 </Button>
                 <Button>
@@ -343,10 +362,10 @@ const Video = () => {
                 </ChannelDetail>
               </ChannelInfo>
               <Subscribe onClick={handleSubscription} disabled={event === "sub"}>
-                {event !== "sub" ? (currentUser &&
+                {(currentUser &&
                   currentUser.subscribedUsers?.includes(channel._id)
                   ? "SUBSCRIBED"
-                  : "SUBSCRIBE") : ("SUBSCRIBING..")}
+                  : "SUBSCRIBE")}
               </Subscribe>
             </Channel>
             <Hr />
@@ -358,7 +377,7 @@ const Video = () => {
         <Videoload />
       )}
       {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible} vidId={currentVideo._id} />)}
-      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
+      {resp && <Notification message={resp} visible={visible} setVisible={setVisible} />}
     </>
   );
 };

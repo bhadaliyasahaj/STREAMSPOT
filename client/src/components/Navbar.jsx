@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 import Person from "@mui/icons-material/Person4";
 import axiosInstance from "../utils/axiosInstance.js";
+import nProgress from "nprogress";
 
 // import { Avatar } from "@mui/material";
 
@@ -134,13 +135,21 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    // Implement logout logic here
-    await axiosInstance.post(`/users/logout/${currentUser._id}`).then((res) => {
-      console.log(res.data);
-      dispatch(logout());
-    });
-    setDropdownOpen(false);
-    navigate("/");
+    nProgress.start()
+    try {
+      // Implement logout logic here
+      await axiosInstance.post(`/users/logout/${currentUser._id}`).then((res) => {
+        console.log(res.data);
+        dispatch(logout());
+      });
+      setDropdownOpen(false);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+    finally {
+      nProgress.done()
+    }
   };
 
   const handleVideoButton = () => {
@@ -154,7 +163,9 @@ const Navbar = () => {
           <Search>
             <Input
               placeholder="Search"
+              value={q}
               onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e)=>{e.key==="Enter"&&navigate(`/search/?q=${q}`);}}
             />
             <SearchOutlinedIcon
               onClick={() => {

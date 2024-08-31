@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Card from "../components/Card";
 import axiosInstance from "../utils/axiosInstance.js";
 import { useLocation } from "react-router-dom";
-// import Videoload from '../components/loadComponent/Videoload.jsx'
+import Nprogress from 'nprogress'
+import 'nprogress/nprogress.css';
 
 const Container = styled.div`
   display: flex;
@@ -12,8 +13,6 @@ const Container = styled.div`
   @media (max-width: 768px) {
     justify-content: center;
   }
-  /* height: 100vh;
-  overflow-y: scroll; */
 `;
 
 const Noticepara = styled.p`
@@ -22,10 +21,11 @@ const Noticepara = styled.p`
 `;
 
 const Home = ({ type }) => {
-  const [videos, setVideos] = useState([1]);
+  const [videos, setVideos] = useState(null);
   const path = useLocation().pathname.split("/")[2];
 
   useEffect(() => {
+    Nprogress.start()
     const fetchVideos = async () => {
       try {
         if (type === "playlist") {
@@ -39,7 +39,6 @@ const Home = ({ type }) => {
           }
         } else {
           const res = await axiosInstance.get(`/videos/${type}`);
-          console.log(res.data);
 
           if (res && res.data && Array.isArray(res.data)) {
             setVideos(res.data);
@@ -52,16 +51,16 @@ const Home = ({ type }) => {
           console.log(err);
         setVideos([]);
       }
+      finally {
+        Nprogress.done()
+      }
     };
     fetchVideos();
   }, [type]);
 
   const removeVideo = (id) => {
-    console.log("running");
-    console.log(id);
-    
     setVideos((prev) => {
-      const update = prev.filter((video) =>  video.id !== id && video._id !== id);
+      const update = prev.filter((video) => video.id !== id && video._id !== id);
       console.log(update);
       return update
     });
@@ -69,21 +68,22 @@ const Home = ({ type }) => {
 
   return (
     <Container>
-      {videos.length > 0 ? (
-        videos.map((video) => (
+      {videos && (videos.length > 0 ? (
+        videos.map((video, index) => (
           <Card
             key={video._id || video.id}
             video={video}
             removed={video.id}
             onRemove={removeVideo}
             type={type}
+            index={type === "trend" && index + 1}
           />
         ))
       ) : type === "sub" ? (
         <Noticepara>You Haven't Subscribed Yet</Noticepara>
       ) : (
         <Noticepara>No Videos Yet</Noticepara>
-      )}
+      ))}
     </Container>
   );
 };

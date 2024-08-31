@@ -13,6 +13,7 @@ import UploadPage from "./components/Upload";
 import Category from "./pages/Category";
 import axiosInstance from "./utils/axiosInstance";
 import Playlist from './components/Playlists'
+import './nprogress.css'
 // import { useSelector } from "react-redux";
 
 const Container = styled.div`

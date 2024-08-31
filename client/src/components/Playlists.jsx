@@ -7,6 +7,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import PlaylistPlay from "@mui/icons-material/PlaylistPlay.js";
 import Playlistload from "./loadComponent/Playlistload.jsx";
 import More from "@mui/icons-material/MoreVert.js";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   width: 240px;
@@ -135,12 +136,13 @@ const List = styled.li`
 
 const Playlist = () => {
   const [loading, setLoading] = useState(false);
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState(null);
   const [image, setImage] = useState([]);
   const [activelist, setActivelist] = useState("");
 
 
   useEffect(() => {
+    nProgress.start()
     const getPlaylists = async () => {
       setLoading(true)
       try {
@@ -153,6 +155,9 @@ const Playlist = () => {
       } catch (err) {
         console.log(err);
         setLoading(false)
+      }
+      finally {
+        nProgress.done()
       }
     };
     getPlaylists();
@@ -184,7 +189,7 @@ const Playlist = () => {
   return (
     <>
       <PlaylistsContainer>
-        {playlists.length > 0 ? (playlists.map((item, index) => (
+        {playlists && (playlists.length > 0 ? (playlists.map((item, index) => (
           loading ? (<Playlistload />) : (
             <Link to={`/playlist/${item._id}`} style={{ textDecoration: "none" }} key={item._id}>
               <Container>
@@ -208,7 +213,7 @@ const Playlist = () => {
                 </Details>
               </Container>
             </Link>)
-        ))) : (<Noticepara>No Playlist Found</Noticepara>)}
+        ))) : (<Noticepara>No Playlist Found</Noticepara>))}
       </PlaylistsContainer>
     </>
   );
