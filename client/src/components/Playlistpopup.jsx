@@ -13,6 +13,7 @@ const PlaylistPopup = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #00000037;
+  z-index: 1000;
 `;
 
 const CenterBox = styled.div`
