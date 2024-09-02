@@ -60,6 +60,8 @@ export const getVideo = async (req, res, next) => {
 };
 
 export const addView = async (req, res, next) => {
+  console.log(req.connection.remoteAddress);
+  
   try {
     await Video.findByIdAndUpdate(req.params.id, {
       $inc: { views: 1 },

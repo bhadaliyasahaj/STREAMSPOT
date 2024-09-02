@@ -184,7 +184,7 @@ const SignIn = () => {
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState("");
   const [orgcode, setorgCode] = useState("");
-  const [verify, setVerify] = useState(false);
+  const [verify, setVerify] = useState({bol:false,cMail:""});
   const [details, setDetails] = useState({ name: "", email: "", password: "" });
   const [send, setSend] = useState("Send Code");
   const [info, setInfo] = useState(false);
@@ -236,9 +236,10 @@ const SignIn = () => {
   };
 
   const handleRegister = async (e) => {
+    nProgress.start()
     e.preventDefault();
     try {
-      if (validatePassword(details.password) && verify) {
+      if (validatePassword(details.password) && verify.bol && verify.cMail===details.email) {
         await axiosInstance
           .post(`/auth/signup`, {
             name: details.name,
@@ -250,8 +251,13 @@ const SignIn = () => {
             setVisible(true);
           });
       } else {
-        // setSend(true);
-        throw new Error("Enter Valid Password Or Verify Mail");
+        if (!verify.bol) {
+          throw new Error("Verify Your Mail");
+        } else if (verify.cMail !== details.email) {
+          throw new Error("You Have Changed Your Mail");
+        } else {
+          throw new Error("Follow Password Instructions");
+        }
       }
     } catch (err) {
       // setSend(true);
@@ -259,6 +265,8 @@ const SignIn = () => {
       const msg = err.response?.data?.message||err.message;
       setResp(msg);
       setVisible(true);
+    }finally{
+      nProgress.done()
     }
   };
 
@@ -294,7 +302,7 @@ const SignIn = () => {
         if (orgcode === code) {
           setResp("Your Email Verified");
           setVisible(true);
-          setVerify(true);
+          setVerify({bol:true,cMail:details.email});
         }
       }
     } catch (err) {

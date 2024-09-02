@@ -8,8 +8,6 @@ import playlistRoutes from './routes/playlist.js'
 import authRoutes from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import { fileURLToPath } from 'url'
-import path from 'path'
 
 dotenv.config();
 

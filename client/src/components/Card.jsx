@@ -8,6 +8,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import More from "@mui/icons-material/MoreVert.js";
 import Playlistpopup from "./Playlistpopup.jsx";
 import Notification from "./Notification.jsx";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   width: ${(props) => props.type !== "sm" && "300px"};
@@ -158,6 +159,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
   };
 
   const handleDelete = async (e, id) => {
+    nProgress.start()
     e.stopPropagation();
     e.preventDefault();
     try {
@@ -169,6 +171,9 @@ const Card = ({ type, video, removed, onRemove, index }) => {
       onRemove(id);
     } catch (err) {
       console.log(err);
+    }
+    finally{
+      nProgress.done()
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 
 const slideIn = keyframes`
@@ -32,8 +32,9 @@ const Container = styled.div`
   top: 100px;
   width: 200px;
   padding: 10px 20px;
-  color: #329dfa;
-  border: 2px solid #329dfa;
+  background-color: #e74c3c; 
+  color: ${({ theme }) => theme.text}; 
+  border: 2px solid #c0392b; 
   border-radius: 10px;
   /* display: none; */
   align-items: center;
