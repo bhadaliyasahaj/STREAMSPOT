@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import axiosInstance from '../utils/axiosInstance.js';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import axiosInstance from "../utils/axiosInstance.js";
+import { useDispatch } from "react-redux";
+import { setmessage } from "../redux/notificationSlice.js";
 
 const PlaylistPopup = styled.div`
   position: fixed;
@@ -17,7 +18,7 @@ const PlaylistPopup = styled.div`
 `;
 
 const CenterBox = styled.div`
-position: relative;
+  position: relative;
   width: 30%;
   padding: 50px 20px;
   /* height: 40%; */
@@ -44,7 +45,7 @@ const PlaylistList = styled.ul`
 const PlaylistItem = styled.li`
   padding: 10px;
   margin-bottom: 10px;
-  background-color: ${({ theme, active }) => active ? "#3a9a3d" : theme.bg};
+  background-color: ${({ theme, active }) => (active ? "#3a9a3d" : theme.bg)};
   color: ${({ theme }) => theme.text};
   border-radius: 5px;
   cursor: pointer;
@@ -77,88 +78,94 @@ const Button = styled.button`
 `;
 
 const Close = styled.button`
-width: fit-content;
-cursor: pointer;
-position: absolute;
-top: 20px;
-font-size:20px;
-right: 20px;
-background-color: transparent;
-color: ${({ theme }) => theme.text};
-border: none;
-`
+  width: fit-content;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  font-size: 20px;
+  right: 20px;
+  background-color: transparent;
+  color: ${({ theme }) => theme.text};
+  border: none;
+`;
 
-function Playlistpopup({ setSave,setResp,setVisible,vidId }) {
-    const [playlists, setPlaylists] = useState([]);
-    const [newPlaylist, setNewPlaylist] = useState('');
-    const [active, setActive] = useState([]);
-    
+function Playlistpopup({ setSave, vidId }) {
+  const [playlists, setPlaylists] = useState([]);
+  const [newPlaylist, setNewPlaylist] = useState("");
+  const [active, setActive] = useState([]);
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-        const getPlaylists = async () => {
-            try {
-                const res = await axiosInstance.get("/playlist/get")
-                console.log(res.data);
-                setPlaylists(res.data.playlists);
-            } catch (err) {
-                console.log(err);
-            }
-
-        }
-        getPlaylists()
-    }, [newPlaylist])
-
-    const handleCreatePlaylist = async () => {
-        try {
-            if (active.length > 0) {
-                const res = await axiosInstance.put(`/playlist/add/${vidId}`, active)
-                console.log(res);
-                setResp("Playlist Updated")
-                setVisible(true)
-                setSave(false)
-            } else {
-                const res = await axiosInstance.post("/playlist/create", { name: newPlaylist })
-                console.log(res);
-                // setPlaylists([...playlists,{name:newPlaylist}])
-                setNewPlaylist('')
-                setResp("Playlist Created")
-                setVisible(true)
-            }
-        } catch (err) {
-            console.log(err);
-        }
+  useEffect(() => {
+    const getPlaylists = async () => {
+      try {
+        const res = await axiosInstance.get("/playlist/get");
+        console.log(res.data);
+        setPlaylists(res.data.playlists);
+      } catch (err) {
+        console.log(err);
+      }
     };
+    getPlaylists();
+  }, [newPlaylist]);
 
-    const handleSelection = async (playlistId) => {
-        if (active.includes(playlistId)) {
-            setActive(active.filter((id) => id !== playlistId))
-        } else {
-            setActive([...active, playlistId])
-        }
+  const handleCreatePlaylist = async () => {
+    try {
+      if (active.length > 0) {
+        const res = await axiosInstance.put(`/playlist/add/${vidId}`, active);
+        console.log(res);
+        dispatch(setmessage("Playlist Updated"))
+        setSave(false);
+      } else {
+        const res = await axiosInstance.post("/playlist/create", {
+          name: newPlaylist,
+        });
+        console.log(res);
+        setNewPlaylist("");
+        dispatch(setmessage("Playlist Created"))
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    return (
-        <PlaylistPopup>
-            <CenterBox>
-                <Close onClick={() => setSave(false)}>X</Close>
-                <Title>Select or Create Playlist</Title>
-                <PlaylistList>
+  const handleSelection = async (playlistId) => {
+    if (active.includes(playlistId)) {
+      setActive(active.filter((id) => id !== playlistId));
+    } else {
+      setActive([...active, playlistId]);
+    }
+  };
 
-                    {playlists.length>0 && playlists.map((playlist, index) => (
-                        <PlaylistItem key={index} onClick={() => handleSelection(playlist._id)} active={active.includes(playlist._id)}>{playlist.name}</PlaylistItem>
-                    ))}
-                </PlaylistList>
-                <CreatePlaylistInput
-                    type="text"
-                    placeholder="Create new playlist"
-                    value={newPlaylist}
-                    onChange={(e) => setNewPlaylist(e.target.value)}
-                    onFocus={()=>setActive([])}
-                />
-                <Button onClick={handleCreatePlaylist}>{active.length > 0 ? "Add To Playlist" : "Create Playlist"}</Button>
-            </CenterBox>
-        </PlaylistPopup>
-    );
+  return (
+    <PlaylistPopup>
+      <CenterBox>
+        <Close onClick={() => setSave(false)}>X</Close>
+        <Title>Select or Create Playlist</Title>
+        <PlaylistList>
+          {playlists.length > 0 &&
+            playlists.map((playlist, index) => (
+              <PlaylistItem
+                key={index}
+                onClick={() => handleSelection(playlist._id)}
+                active={active.includes(playlist._id)}
+              >
+                {playlist.name}
+              </PlaylistItem>
+            ))}
+        </PlaylistList>
+        <CreatePlaylistInput
+          type="text"
+          placeholder="Create new playlist"
+          value={newPlaylist}
+          onChange={(e) => setNewPlaylist(e.target.value)}
+          onFocus={() => setActive([])}
+        />
+        <Button onClick={handleCreatePlaylist}>
+          {active.length > 0 ? "Add To Playlist" : "Create Playlist"}
+        </Button>
+      </CenterBox>
+    </PlaylistPopup>
+  );
 }
 
 export default Playlistpopup;

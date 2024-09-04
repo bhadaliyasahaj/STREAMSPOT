@@ -8,9 +8,10 @@ import {
 } from "firebase/storage";
 import { app } from "../firebaseConfig.js";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../utils/axiosInstance.js";
 import nProgress from "nprogress";
+import { setmessage } from "../redux/notificationSlice.js";
 
 const Container = styled.div`
   width: 100%;
@@ -116,6 +117,7 @@ function Upload() {
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const { currentUser } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
@@ -147,7 +149,6 @@ function Upload() {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, `/users/${currentUser._id}/${fileName}`);
-
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -172,6 +173,7 @@ function Upload() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          urlType==="imgUrl"?dispatch(setmessage("Thumbnail Uploaded")):dispatch(setmessage("Video Uploaded"))
           setInputs((prev) => {
             return { ...prev, [urlType]: downloadURL };
           });

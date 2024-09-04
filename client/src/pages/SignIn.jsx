@@ -3,13 +3,13 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
-import Notification from "../components/Notification.jsx";
 import validator from "validator";
 import axiosInstance from "../utils/axiosInstance.js";
 import InfoIcon from "@mui/icons-material/InfoOutlined.js";
 import Visibility from "@mui/icons-material/Visibility.js";
 import VisibilityOff from "@mui/icons-material/VisibilityOff.js";
 import nProgress from "nprogress";
+import { setmessage } from "../redux/notificationSlice.js";
 
 const Container = styled.div`
   display: flex;
@@ -175,13 +175,8 @@ const Info = styled.div`
 `;
 
 const SignIn = () => {
-  // const [name, setName] = useState("")
-  // const [email, setEmail] = useState("")
-  // const [password, setPassword] = useState("")
-  const [resp, setResp] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [visible, setVisible] = useState(false);
   const [code, setCode] = useState("");
   const [orgcode, setorgCode] = useState("");
   const [verify, setVerify] = useState({bol:false,cMail:""});
@@ -208,15 +203,13 @@ const SignIn = () => {
         })
         .then((res) => {
           console.log(res);
+          dispatch(setmessage("Successfully Logged In"));
           dispatch(loginSuccess(res.data));
-          setResp("Successfully Logged In");
-          setVisible(true);
           navigate("/");
         });
     } catch (resp) {
       console.log(resp);
-      setResp(resp.response.data.message);
-      setVisible(true);
+      dispatch(setmessage(resp.response.data.message));
       dispatch(loginFailure());
     }
     finally{
@@ -247,8 +240,7 @@ const SignIn = () => {
             email: details.email,
           })
           .then((res) => {
-            setResp(res.data);
-            setVisible(true);
+            dispatch(setmessage(res.data));
           });
       } else {
         if (!verify.bol) {
@@ -263,8 +255,7 @@ const SignIn = () => {
       // setSend(true);
       console.log(err);
       const msg = err.response?.data?.message||err.message;
-      setResp(msg);
-      setVisible(true);
+      dispatch(setmessage(msg));
     }finally{
       nProgress.done()
     }
@@ -273,8 +264,7 @@ const SignIn = () => {
   const getCode = async () => {
     try {
       if (!validateEmail(details.email) || !details.name) {
-        setResp("Enter Valid Details");
-        setVisible(true);
+        dispatch(setmessage("Enter Valid Details"));
       } else {
         setSend("Sending...");
         const res = await axiosInstance.post(`/auth/getcode`, {
@@ -282,26 +272,22 @@ const SignIn = () => {
           name: details.name,
         });
         setorgCode(res.data.code);
-        setResp("Code Is Sended To Your Mail");
-        setVisible(true);
+        dispatch(setmessage("Code Is Sended To Your Mail"));
         setSend("Resend");
       }
     } catch (err) {
       setSend("Resend");
-      setResp(err.response.data.message);
-      setVisible(true);
+      dispatch(setmessage(err.response.data.message));
     }
   };
 
   const verifyCode = async () => {
     try {
       if (!code || code !== orgcode) {
-        setResp("Enter Valid Code");
-        setVisible(true);
+        dispatch(setmessage("Enter Valid Code"));
       } else {
         if (orgcode === code) {
-          setResp("Your Email Verified");
-          setVisible(true);
+          dispatch(setmessage("Your Email Verified"));
           setVerify({bol:true,cMail:details.email});
         }
       }
@@ -464,7 +450,6 @@ const SignIn = () => {
           <Link>Terms</Link>
         </Links>
       </More>
-      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
     </Container>
   );
 };

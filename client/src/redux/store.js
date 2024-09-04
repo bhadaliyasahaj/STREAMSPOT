@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice.js";
 import videoReducer from "./videoSlice.js";
+import notificationReducer from "./notificationSlice.js";
 import {
   FLUSH,
   REHYDRATE,
@@ -14,7 +15,7 @@ import persistStore from "redux-persist/es/persistStore";
 import persistReducer from "redux-persist/es/persistReducer";
 
 const persistConfig = { key: "root", version: 1, storage };
-const rootReducer = combineReducers({ user: userReducer, video: videoReducer });
+const rootReducer = combineReducers({ user: userReducer, video: videoReducer, notification:notificationReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,

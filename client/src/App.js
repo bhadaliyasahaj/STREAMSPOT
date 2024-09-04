@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
 import { darkTheme, lightTheme } from "./utils/Theme";
-import { BrowserRouter, Routes, Route,HashRouter } from "react-router-dom";
+import { Routes, Route,HashRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
@@ -14,6 +14,9 @@ import Category from "./pages/Category";
 import axiosInstance from "./utils/axiosInstance";
 import Playlist from './components/Playlists'
 import './nprogress.css'
+import Notification from "./components/Notification";
+import { useDispatch } from "react-redux";
+import { setmessage } from "./redux/notificationSlice";
 // import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -47,6 +50,8 @@ function App() {
     };
     verifyUser();
   }, []);
+  const dispatch = useDispatch()
+  // dispatch(setmessage("It is Working"))
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -96,6 +101,7 @@ function App() {
             </Wrapper>
           </Main>
         </HashRouter>
+        <Notification/>
       </Container>
     </ThemeProvider>
   );
