@@ -5,7 +5,6 @@ import { invisible } from "../redux/notificationSlice";
 
 const slideIn = keyframes`
     from{
-        display: block;
         transform: translateX(100%);
         opacity: 0;
     }
@@ -36,6 +35,8 @@ const Container = styled.div`
   color: ${({ theme }) => theme.text}; 
   border: 2px solid #c0392b; 
   border-radius: 10px;
+  transform: translateX(100%);
+  opacity: 0;
   /* display: ${(props) => (!props.visible && "none")}; */
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

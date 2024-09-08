@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
 import { darkTheme, lightTheme } from "./utils/Theme";
-import { Routes, Route,HashRouter } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
@@ -17,6 +17,7 @@ import './nprogress.css'
 import Notification from "./components/Notification";
 import { useDispatch } from "react-redux";
 import { setmessage } from "./redux/notificationSlice";
+import Resetpass from "./components/Resetpass";
 // import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -69,7 +70,7 @@ function App() {
                   <Route path="music" element={<Category category="music" />} />
                   <Route path="playlist" >
                     <Route index element={<Playlist />} />
-                    <Route path=":id" element={<Home type="playlist"/>} />
+                    <Route path=":id" element={<Home type="playlist" />} />
                   </Route>
                   <Route
                     path="sports"
@@ -97,11 +98,12 @@ function App() {
                     <Route path=":id" element={<Video />} />
                   </Route>
                 </Route>
+                <Route path="reset-password" element={<Resetpass />} />
               </Routes>
             </Wrapper>
           </Main>
         </HashRouter>
-        <Notification/>
+        <Notification />
       </Container>
     </ThemeProvider>
   );

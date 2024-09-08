@@ -25,6 +25,9 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsOptions))
 
+app.get('/api/reset-password',(req,res)=>{    
+    console.log(req.query);
+})
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
@@ -42,6 +45,7 @@ app.use((err,req,res,next)=>{
         message
     })
 })
+
 
 
 app.listen(process.env.PORT,()=>{

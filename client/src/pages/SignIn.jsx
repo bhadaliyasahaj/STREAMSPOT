@@ -10,6 +10,7 @@ import Visibility from "@mui/icons-material/Visibility.js";
 import VisibilityOff from "@mui/icons-material/VisibilityOff.js";
 import nProgress from "nprogress";
 import { setmessage } from "../redux/notificationSlice.js";
+import Forgotpass from "../components/Forgotpass.jsx";
 
 const Container = styled.div`
   display: flex;
@@ -174,16 +175,24 @@ const Info = styled.div`
   }
 `;
 
+const Forgot = styled.div`
+  align-self: flex-end;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.textSoft};
+  cursor: pointer;
+`
+
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [orgcode, setorgCode] = useState("");
-  const [verify, setVerify] = useState({bol:false,cMail:""});
+  const [verify, setVerify] = useState({ bol: false, cMail: "" });
   const [details, setDetails] = useState({ name: "", email: "", password: "" });
   const [send, setSend] = useState("Send Code");
   const [info, setInfo] = useState(false);
   const [passawail, setPassawail] = useState(false);
+  const [forgot,setForgot] = useState(false)
 
   const user = (e) => {
     const { name, value } = e.target;
@@ -202,17 +211,17 @@ const SignIn = () => {
           password: details.password,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           dispatch(setmessage("Successfully Logged In"));
           dispatch(loginSuccess(res.data));
           navigate("/");
         });
     } catch (resp) {
-      console.log(resp);
+      // console.log(resp);
       dispatch(setmessage(resp.response.data.message));
       dispatch(loginFailure());
     }
-    finally{
+    finally {
       nProgress.done()
     }
   };
@@ -232,7 +241,7 @@ const SignIn = () => {
     nProgress.start()
     e.preventDefault();
     try {
-      if (validatePassword(details.password) && verify.bol && verify.cMail===details.email) {
+      if (validatePassword(details.password) && verify.bol && verify.cMail === details.email) {
         await axiosInstance
           .post(`/auth/signup`, {
             name: details.name,
@@ -254,9 +263,9 @@ const SignIn = () => {
     } catch (err) {
       // setSend(true);
       console.log(err);
-      const msg = err.response?.data?.message||err.message;
+      const msg = err.response?.data?.message || err.message;
       dispatch(setmessage(msg));
-    }finally{
+    } finally {
       nProgress.done()
     }
   };
@@ -288,7 +297,7 @@ const SignIn = () => {
       } else {
         if (orgcode === code) {
           dispatch(setmessage("Your Email Verified"));
-          setVerify({bol:true,cMail:details.email});
+          setVerify({ bol: true, cMail: details.email });
         }
       }
     } catch (err) {
@@ -296,7 +305,9 @@ const SignIn = () => {
     }
   };
 
+
   return (
+    <>
     <Container>
       <Wrapper>
         <Title>Sign in</Title>
@@ -309,7 +320,7 @@ const SignIn = () => {
         />
         <InputWrapper>
           <Input
-            type={passawail?"text":"password"}
+            type={passawail ? "text" : "password"}
             value={details.password}
             placeholder="password"
             name="password"
@@ -341,7 +352,8 @@ const SignIn = () => {
             />
           )}
         </InputWrapper>
-        <Button onClick={handleLogin}>Sign in</Button>
+        <Forgot onClick={()=>setForgot(true)}>Forgot Password ?</Forgot>
+        <Button onClick={handleLogin} type="submit">Sign in</Button>
         <Title>or</Title>
         <Title>Sign Up</Title>
         <SubTitle>to become member of StreamSpot</SubTitle>
@@ -451,6 +463,8 @@ const SignIn = () => {
         </Links>
       </More>
     </Container>
+      {forgot && <Forgotpass setForgot={setForgot}/>}
+    </>
   );
 };
 

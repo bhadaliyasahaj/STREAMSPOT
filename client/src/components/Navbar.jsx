@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOff";
+import SearchOutlinedIcon from "@mui/icons-material/SearchRounded.js";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,11 +51,12 @@ const Search = styled.div`
 
 const Input = styled.input`
   border: none;
-  width: 90%;
+  width: 93%;
   height: 100%;
   background-color: transparent;
   outline: none;
   color: ${({ theme }) => theme.text};
+  border-right:1px solid gray
 `;
 
 const Button = styled.button`
@@ -162,7 +163,7 @@ const Navbar = () => {
         <Wrapper>
           <Search>
             <Input
-              placeholder="Search"
+              placeholder="Search Title..."
               value={q}
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e)=>{e.key==="Enter"&&navigate(`/search/?q=${q}`);}}
@@ -171,6 +172,7 @@ const Navbar = () => {
               onClick={() => {
                 navigate(`/search/?q=${q}`);
               }}
+              style={{color:"red"}}
             />
           </Search>
           {currentUser ? (
