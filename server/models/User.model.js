@@ -27,36 +27,36 @@ const UserSchema = new mongoose.Schema(
       default: 0,
     },
     subscribedUsers: {
-      type:[String],
+      type: [String],
     },
     history: {
       type: [String],
     },
-    resetToken:{
-      type:String,
-      default:null
+    resetToken: {
+      type: String,
+      default: null
     },
-    resetTokenExpiry:{
-      type:Number,
-      default:null
+    resetTokenExpiry: {
+      type: Number,
+      default: null
     }
   },
   { timestamps: true },
 );
 
-UserSchema.methods.createAccessToken=function(){
-  const payload = {id:this._id,username:this.name};
-  const option = {expiresIn:"1d"}
+UserSchema.methods.createAccessToken = function () {
+  const payload = { id: this._id, username: this.name };
+  const option = { expiresIn: "1d" }
 
-  const accesstoken = JWT.sign(payload,process.env.ACCESS_SECRETKEY,option)
+  const accesstoken = JWT.sign(payload, process.env.ACCESS_SECRETKEY, option)
   return accesstoken
 }
 
-UserSchema.methods.createRefreshToken=function(){
-  const payload = {id:this._id};
-  const option = {expiresIn:"2d"}
+UserSchema.methods.createRefreshToken = function () {
+  const payload = { id: this._id };
+  const option = { expiresIn: "2d" }
 
-  const refreshtoken = JWT.sign(payload,process.env.REFRESH_SECRETKEY,option)
+  const refreshtoken = JWT.sign(payload, process.env.REFRESH_SECRETKEY, option)
   return refreshtoken
 }
 export default mongoose.model("User", UserSchema);

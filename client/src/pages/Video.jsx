@@ -22,6 +22,7 @@ import { app } from "../firebaseConfig.js";
 import axiosInstance from "../utils/axiosInstance.js";
 import Playlistpopup from "../components/Playlistpopup.jsx";
 import nProgress from "nprogress";
+import { setmessage } from "../redux/notificationSlice.js";
 
 const Container = styled.div`
   display: flex;
@@ -156,8 +157,6 @@ const Video = () => {
   const [channel, setChannel] = useState({});
   const [more, setMore] = useState(false);
   const [allowDelete, setAllowDelete] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [resp, setResp] = useState("");
   const [event, setEvent] = useState("");
   const [save, setSave] = useState(false);
 
@@ -275,8 +274,7 @@ const Video = () => {
       deleteObject(imgRef)
         .then(async () => { 
           await axiosInstance.delete(`/videos/${currentVideo._id}`);
-          setResp("Video Has Been Successfully Deleted");
-          setVisible(true);
+          dispatch(setmessage("Video Has Been Successfully Deleted"))
           navigate("/");
         })
         .catch((error) => { });
@@ -376,8 +374,7 @@ const Video = () => {
       ) : (
         <Videoload />
       )}
-      {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible} vidId={currentVideo._id} />)}
-      {resp && <Notification message={resp} visible={visible} setVisible={setVisible} />}
+      {save && (<Playlistpopup setSave={setSave} vidId={currentVideo._id} />)}
     </>
   );
 };

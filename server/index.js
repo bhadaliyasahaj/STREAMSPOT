@@ -15,9 +15,9 @@ dotenv.config();
 const app = express()
 
 const corsOptions = {
-    origin:process.env.CLIENT_URL, 
-    credentials: true, 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
 
 
@@ -25,18 +25,15 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsOptions))
 
-app.get('/api/reset-password',(req,res)=>{    
-    console.log(req.query);
-})
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/videos", videoRoutes)
 app.use("/api/comments", commentRoutes)
-app.use("/api/playlist",playlistRoutes)
+app.use("/api/playlist", playlistRoutes)
 
 
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next) => {
     const status = err.status || 500;
     const message = err.message || "Something Went Wrong";
     return res.status(status).json({
@@ -48,7 +45,7 @@ app.use((err,req,res,next)=>{
 
 
 
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT, () => {
     connectDB();
     console.log(`Server is running on port ${process.env.PORT}`)
 })

@@ -1,7 +1,7 @@
 import { createError } from "../error.js";
 import Video from "../models/Video.model.js";
 import User from "../models/User.model.js";
-import Playlist from "../models/Playlist.model.js";
+import Comment from "../models/Comment.model.js";
 
 export const addVideo = async (req, res, next) => {
   const newVideo = new Video({ userId: req.user.id, ...req.body });
@@ -40,6 +40,7 @@ export const deleteVideo = async (req, res, next) => {
     if (!video) return next(createError(404, "Video Not Found!!"));
     if (req.user.id === video.userId) {
       await Video.findByIdAndDelete(req.params.id);
+      await Comment.deleteMany({videoID:req.params.id})
       // const playlist = await Playlist.find({playlist:{$in:req.params.id}})
       res.status(200).json("The Video Has Been Deleted!!");
     } else {
