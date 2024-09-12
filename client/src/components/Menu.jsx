@@ -140,6 +140,7 @@ const Img = styled.img`
   height: 25px;
 `;
 
+
 const Menu = ({ darkMode, setDarkMode }) => {
   const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();

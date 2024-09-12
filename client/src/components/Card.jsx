@@ -19,6 +19,7 @@ const Container = styled.div`
   position: relative;
   @media (max-width: 768px) {
     width: 300px;
+    margin-bottom: 15px;
   }
 `;
 

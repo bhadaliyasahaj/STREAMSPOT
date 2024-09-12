@@ -27,15 +27,23 @@ import { setmessage } from "../redux/notificationSlice.js";
 const Container = styled.div`
   display: flex;
   gap: 24px;
-  @media (max-width: 768px) {
+  /* padding: 1px; */
+  @media (max-width: 1024px) {
     flex-direction: column;
+    gap:20px;
+    padding:0px 10px;
   }
 `;
 
 const Content = styled.div`
   flex: 5;
 `;
-const VideoWrapper = styled.div``;
+
+const VideoWrapper = styled.div`
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
 
 const Title = styled.h1`
   font-size: 18px;
@@ -43,22 +51,36 @@ const Title = styled.h1`
   margin-top: 20px;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.text};
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const Details = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 `;
 
 const Info = styled.span`
   color: ${({ theme }) => theme.textSoft};
+  font-size: 14px;
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin:0px 0px 15px 7px;
+  }
 `;
 
 const Buttons = styled.div`
   display: flex;
   gap: 20px;
   color: ${({ theme }) => theme.text};
+  @media (max-width: 768px) {
+    margin: auto;
+    width: 100%;
+    justify-content: space-between;
+  }
 `;
 
 const Button = styled.div`
@@ -76,6 +98,9 @@ const Hr = styled.hr`
 const Channel = styled.div`
   display: flex;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const ChannelInfo = styled.div`
@@ -87,16 +112,26 @@ const Image = styled.img`
   min-width: 50px;
   height: 50px;
   border-radius: 50%;
+  @media (max-width: 768px) {
+    min-width: 40px;
+    height: 40px;
+  }
 `;
 
 const ChannelDetail = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.text};
+  @media (max-width: 768px) {
+    position: relative;
+  }
 `;
 
 const ChannelName = styled.span`
   font-weight: 500;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const ChannelCounter = styled.span`
@@ -110,6 +145,11 @@ const Description = styled.div`
   position: relative;
   padding: 0px 0px 10px 0px;
   font-size: 14px;
+  @media (max-width: 768px) {
+    left:-10%;
+    width:100%;
+    font-size: 12px;
+  }
 `;
 
 const Desc = styled.div`
@@ -128,6 +168,12 @@ const Subscribe = styled.button`
   height: max-content;
   padding: 10px 20px;
   cursor: pointer;
+  @media (max-width: 768px) {
+    position: absolute;
+    /* width: 100%; */
+    padding: 8px 8px;
+    right: 10px;
+  }
 `;
 
 const VideoFrame = styled.video`
@@ -135,6 +181,12 @@ const VideoFrame = styled.video`
   max-height: 720px;
   width: 100%;
   object-fit: cover;
+  @media (max-width: 1024px) {
+    height: 350px;
+  }
+  @media (max-width: 768px) {
+    height: 250px;
+  }
 `;
 
 const More = styled.p`
@@ -144,6 +196,15 @@ const More = styled.p`
   font-size: 15px;
   cursor: pointer;
   color: ${({ theme }) => theme.text};
+  @media (max-width: 768px) {
+    font-size: 13px;
+  }
+`;
+
+const Span = styled.span`
+  @media (max-width: 768px) {
+    display:none;
+  }
 `;
 
 
@@ -272,7 +333,7 @@ const Video = () => {
         })
         .catch((error) => { });
       deleteObject(imgRef)
-        .then(async () => { 
+        .then(async () => {
           await axiosInstance.delete(`/videos/${currentVideo._id}`);
           dispatch(setmessage("Video Has Been Successfully Deleted"))
           navigate("/");
@@ -319,14 +380,14 @@ const Video = () => {
                   Dislike
                 </Button>
                 <Button>
-                  <ReplyOutlinedIcon onClick={handleShare} /> Share
+                  <ReplyOutlinedIcon onClick={handleShare} /><Span>Share</Span>
                 </Button>
                 <Button onClick={handleSave}>
-                  <AddTaskOutlinedIcon /> Save
+                  <AddTaskOutlinedIcon /><Span>Save</Span>
                 </Button>
                 {allowDelete && (
                   <Button onClick={handleVideoDelete}>
-                    <DeleteOutline /> Delete
+                    <DeleteOutline /> <Span>Delete</Span>
                   </Button>
                 )}
               </Buttons>

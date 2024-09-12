@@ -56,7 +56,7 @@ const Input = styled.input`
   background-color: transparent;
   outline: none;
   color: ${({ theme }) => theme.text};
-  border-right:1px solid gray
+  border-right:1px solid gray;
 `;
 
 const Button = styled.button`
@@ -172,7 +172,7 @@ const Navbar = () => {
               onClick={() => {
                 navigate(`/search/?q=${q}`);
               }}
-              style={{color:"red"}}
+              style={{color:"red",margin:"0 0px 0 10px"}}
             />
           </Search>
           {currentUser ? (

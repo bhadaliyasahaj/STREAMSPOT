@@ -47,4 +47,7 @@ router.get("/verify",verifyToken)
 
 //generate new access token
 router.post("/refreshtoken",newrefreshtoken)
+
+//retrive subscriber
+
 export default router;
