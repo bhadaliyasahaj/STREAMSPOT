@@ -22,22 +22,40 @@ const SkeletonElement = styled.div`
   background: linear-gradient(90deg, #f0f0f0ae 25%, #e0e0e0d1 50%, #f0f0f0ae 75%);
   background-size: 200% 100%;
   animation: ${skeletonAnimation} 1.5s infinite;
+  border-radius: 5px;
 `;
 
+// Video Wrapper skeleton with responsive design
 const SkeletonVideoWrapper = styled(SkeletonElement)`
-  width: 70%;
+  width: 100%;
   height: 500px;
+
+  @media (max-width: 1024px) {
+    height: 350px;
+  }
+
+  @media (max-width: 768px) {
+    height: 250px;
+  }
 `;
 
 const SkeletonTitle = styled(SkeletonElement)`
   width: 70%;
   height: 20px;
   margin: 10px 0;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const SkeletonDetails = styled(SkeletonElement)`
   width: 50%;
   height: 15px;
+
+  @media (max-width: 768px) {
+    width: 70%;
+  }
 `;
 
 const SkeletonChannel = styled(SkeletonElement)`
@@ -50,6 +68,11 @@ const SkeletonImage = styled(SkeletonElement)`
   width: 50px;
   height: 50px;
   border-radius: 50%;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const SkeletonChannelInfo = styled.div`
@@ -66,7 +89,11 @@ const SkeletonText = styled(SkeletonElement)`
 const SkeletonSubscribe = styled(SkeletonElement)`
   width: 100px;
   height: 30px;
-  align-self: flex-start;
+
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 25px;
+  }
 `;
 
 const SkeletonHr = styled.hr`

@@ -18,12 +18,15 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  z-index: 100;
+  padding: 20px;
+  @media (max-width: 768px) {
+    width: auto;
+    padding: 0 20px;
+  }
 `;
+
 const Wrapper = styled.div`
   width: 600px;
-  /* height: 650px; */
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   padding: 20px;
@@ -32,10 +35,23 @@ const Wrapper = styled.div`
   gap: 20px;
   position: relative;
   overflow-y: auto;
+  border-radius: 10px;
+  @media (max-width: 768px) {
+    width: auto;
+  }
+  @media (max-width: 480px) {
+    width: auto;
+    padding: 10px;
+    gap: 15px;
+  }
 `;
 
 const Title = styled.h1`
   text-align: center;
+  font-size: 24px;
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Input = styled.input`
@@ -44,6 +60,11 @@ const Input = styled.input`
   border-radius: 3px;
   padding: 10px;
   background-color: transparent;
+  font-size: 16px;
+  @media (max-width: 480px) {
+    padding: 8px;
+    font-size: 14px;
+  }
 `;
 
 const Desc = styled.textarea`
@@ -52,6 +73,12 @@ const Desc = styled.textarea`
   border-radius: 3px;
   padding: 10px;
   background-color: transparent;
+  font-size: 16px;
+  resize: vertical;
+  @media (max-width: 480px) {
+    padding: 8px;
+    font-size: 14px;
+  }
 `;
 
 const Select = styled.select`
@@ -60,6 +87,11 @@ const Select = styled.select`
   border-radius: 3px;
   padding: 10px;
   background-color: transparent;
+  font-size: 16px;
+  @media (max-width: 480px) {
+    padding: 8px;
+    font-size: 14px;
+  }
 `;
 
 const Option = styled.option`
@@ -75,13 +107,21 @@ const Button = styled.button`
   cursor: pointer;
   background-color: ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.textHard};
+  font-size: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.textSoft};
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 `;
 
 const Label = styled.label`
   font-size: 14px;
-  border-radius: 3px;
-  border: none;
-  padding: 10px 10px;
   font-weight: 500;
   cursor: pointer;
   color: ${({ theme }) => theme.textSoft};
@@ -97,14 +137,17 @@ const ThumbnailPreview = styled.div`
 `;
 
 const VideoPreview = styled.video`
-   margin-bottom: 20px;
-   border-radius:10px;
-  source {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  @media (max-width: 480px) {
+    border-radius: 5px;
   }
-`
+`;
+
 
 function Upload() {
   const [img, setImg] = useState(undefined);

@@ -43,6 +43,11 @@ const Container = styled.div`
   z-index: 1000;
   animation: ${(props) => (props.visible ? slideIn : slideOut)} 0.8s ease-in-out
     forwards;
+  @media (max-width: 768px) {
+    width: fit-content;
+    top:60px;
+    right:20px;
+  }
 `;
 
 const Wraper = styled.div`
@@ -50,12 +55,15 @@ const Wraper = styled.div`
   text-align: center;
   font-size: 14px;
   font-weight: bold;
+  @media (max-width: 768px) {
+    font-size:12px;
+  }
 `;
 
 function Notification() {
   const { message, visible } = useSelector((state) => state.notification)
   const dispatch = useDispatch()
-  const [display,setDisplay] = useState(visible) 
+  const [display, setDisplay] = useState(visible)
   useEffect(() => {
     setDisplay(true);
     const newtimer = setTimeout(() => {
@@ -66,16 +74,16 @@ function Notification() {
     }, 4000);
 
     return () => {
-    clearTimeout(timer)
-    clearTimeout(newtimer)
-  };
+      clearTimeout(timer)
+      clearTimeout(newtimer)
+    };
   }, [visible]);
 
   return (
-     visible?(
+    visible ? (
       <Container visible={display} >
         <Wraper>{message}</Wraper>
-      </Container>):null
+      </Container>) : null
   )
 }
 

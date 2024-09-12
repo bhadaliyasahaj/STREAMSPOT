@@ -56,7 +56,7 @@ const Input = styled.input`
   background-color: transparent;
   outline: none;
   color: ${({ theme }) => theme.text};
-  border-right:1px solid gray;
+  border-right:1px solid gray;  
 `;
 
 const Button = styled.button`

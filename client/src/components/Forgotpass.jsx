@@ -14,7 +14,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 1000;
     background-color: rgba(0, 0, 0, 0.6); 
 `;
 
@@ -29,6 +29,9 @@ const PopupBox = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    @media (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 const Title = styled.h2`

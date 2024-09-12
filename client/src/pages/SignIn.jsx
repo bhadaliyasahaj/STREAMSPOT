@@ -23,7 +23,7 @@ const Container = styled.div`
 
   @media (max-width: 768px) {
     height: auto; /* Adjust height for mobile screens */
-    padding: 20px; /* Add padding for smaller screens */
+    padding:0 30px; /* Add padding for smaller screens */
   }
 `;
 
@@ -135,7 +135,10 @@ const InputWrapper = styled.div`
 
   @media (max-width: 480px) {
     flex-direction: column; /* Stack elements vertically on small screens */
-    gap: 5px;
+    /* gap: 5px; */
+    justify-content: center;
+    align-items: center;
+    width:100%;
   }
 `;
 
@@ -143,6 +146,11 @@ const Inputtag = styled.div`
   width: 86%;
   /* height: 100%; */
   position: relative;
+  @media (max-width: 768px) {
+    width: 100%;
+    align-self: center;
+    left: -10px;
+  }
 `;
 
 // Info styles

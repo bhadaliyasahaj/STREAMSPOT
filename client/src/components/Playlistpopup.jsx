@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axiosInstance from "../utils/axiosInstance.js";
 import { useDispatch } from "react-redux";
 import { setmessage } from "../redux/notificationSlice.js";
+import Loader from 'react-spinners/PropagateLoader.js'
 
 const PlaylistPopup = styled.div`
   position: fixed;
@@ -27,6 +28,9 @@ const CenterBox = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 const Title = styled.h2`
@@ -40,6 +44,9 @@ const PlaylistList = styled.ul`
   margin-bottom: 20px;
   overflow-y: auto;
   max-height: 50%;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
 `;
 
 const PlaylistItem = styled.li`
@@ -49,10 +56,7 @@ const PlaylistItem = styled.li`
   color: ${({ theme }) => theme.text};
   border-radius: 5px;
   cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.hover};
-  }
+  /* width: 100%; */
 `;
 
 const CreatePlaylistInput = styled.input`
@@ -89,8 +93,13 @@ const Close = styled.button`
   border: none;
 `;
 
+const Notice = styled.p`
+  padding:0 20px;
+  color: ${({ theme }) => theme.textSoft};
+`;
+
 function Playlistpopup({ setSave, vidId }) {
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState(null);
   const [newPlaylist, setNewPlaylist] = useState("");
   const [active, setActive] = useState([]);
   const dispatch = useDispatch()
@@ -142,7 +151,7 @@ function Playlistpopup({ setSave, vidId }) {
         <Close onClick={() => setSave(false)}>X</Close>
         <Title>Select or Create Playlist</Title>
         <PlaylistList>
-          {playlists.length > 0 &&
+          {playlists ? (playlists.length > 0 ?
             playlists.map((playlist, index) => (
               <PlaylistItem
                 key={index}
@@ -151,7 +160,7 @@ function Playlistpopup({ setSave, vidId }) {
               >
                 {playlist.name}
               </PlaylistItem>
-            ))}
+            )) : (<Notice>No Playlists Yet</Notice>)) : (<Loader color="red" style={{alignSelf:"center",margin:"20px 0px"}}/>)}
         </PlaylistList>
         <CreatePlaylistInput
           type="text"

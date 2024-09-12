@@ -14,12 +14,12 @@ const Container = styled.div`
   /* margin-bottom: 45px; */
   cursor: pointer;
   /* display: ${(props) => props.type === "sm" && "flex"}; */
-  gap: 10px;
   position: relative;
   /* border: 2px solid black; */
 
   @media (max-width: 768px) {
-    width: 300px;
+    width: 270px;
+    gap:20px;
   }
 `;
 
@@ -30,6 +30,9 @@ const Image = styled.img`
   background-color: #999;
   flex: 1;
   opacity: 0.8;
+  @media (max-width: 768px) {
+    height: 180px;
+  }
 `;
 
 const Details = styled.div`
@@ -46,7 +49,7 @@ gap: 5px;
 `;
 
 const ImageContainer = styled.div`
-  width: 240px;
+  width: 100%;
   height: 160px;
   border-radius: 20px;
   overflow: hidden;
@@ -79,6 +82,11 @@ const Info = styled.div`
 const PlaylistsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap:20px;
+  }
   /* width: 100%; */
 `;
 
@@ -89,6 +97,7 @@ const Noticepara = styled.p`
 
 const MoreContainer = styled.div`
 position: absolute;
+z-index: 10;
 right: 0;
 display: flex;
 justify-content: center;

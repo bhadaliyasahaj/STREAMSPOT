@@ -19,7 +19,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #f4f4f4;
-  z-index: 100;
+  z-index: 1000;
 `;
 
 const MainBox = styled.div`
