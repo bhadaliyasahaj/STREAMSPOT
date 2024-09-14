@@ -32,7 +32,7 @@ const Image = styled.img`
 `;
 
 const Details = styled.div`
-  width: ${(props) => props.type === "sm" ? "100%":"90%"};
+  width: ${(props) => props.type === "sm" ? "100%" : "90%"};
   display: flex;
   margin-top: ${(props) => props.type !== "sm" && "5px"};
   gap: 12px;
@@ -67,7 +67,7 @@ const Info = styled.div`
 `;
 
 const MoreContainer = styled.div`
-display: ${(props)=>props.type!=="sm"?"flex":"none"};
+display: ${(props) => props.type !== "sm" ? "flex" : "none"};
 position: absolute;
 right: 0;
 justify-content: center;
@@ -173,7 +173,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
     } catch (err) {
       console.log(err);
     }
-    finally{
+    finally {
       nProgress.done()
     }
   };
@@ -231,7 +231,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
                 <Info>
                   {video.views} views • {format(video.createdAt)}
                 </Info>
-                {index && <Info style={{marginTop:"5px"}}>
+                {index && <Info style={{ marginTop: "5px" }}>
                   #{index} on trending for {video.category}
                 </Info>}
               </Texts>
@@ -242,7 +242,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
         <Container>
           <Image />
           <MoreContainer enremove={enremove}>
-            <More className="more-icon" onClick={handleMore} style={{bottom:"10px"}}/>
+            <More className="more-icon" onClick={handleMore} style={{ bottom: "10px" }} />
             <Info className="delete-option">
               <List enable={!isPlaylistPage} onClick={handleSave}>Save</List>
               <List enable={isPlaylistPage} onClick={(e) => handleDelete(e, video.id)} >UnSave</List>
@@ -256,7 +256,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
         </Container>
       )}
       {save && (<Playlistpopup setSave={setSave} setResp={setResp} setVisible={setVisible} vidId={video._id} />)}
-      {resp && <Notification message={resp} visible={visible} setVisible={setVisible}/>}
+      {resp && <Notification message={resp} visible={visible} setVisible={setVisible} />}
     </>
   );
 };
