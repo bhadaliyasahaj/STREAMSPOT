@@ -385,7 +385,7 @@ function Upload() {
     e.preventDefault();
     e.stopPropagation()
     const file = e.target.files && e.target.files.length > 0 ? e.target.files[0] : e.dataTransfer.files[0];
-    if (file.type.split("/")[0] === "image") {
+    if (file.type.startsWith("image/")) {
       setImg(file);
       setThumbnailPreview(URL.createObjectURL(file));
     }
@@ -395,7 +395,7 @@ function Upload() {
     e.preventDefault();
     e.stopPropagation();
     const file = e.target.files && e.target.files.length > 0 ? e.target.files[0] : e.dataTransfer.files[0];
-    if (file.type.split("/")[0] === "video") {
+    if (file.type.startsWith("video/")) {
       setVideo(undefined);
       setVideo(file);
       setVideoPreview(URL.createObjectURL(file));
