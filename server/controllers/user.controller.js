@@ -3,19 +3,36 @@ import Subscribe from "../models/Subscribe.model.js";
 import User from "../models/User.model.js";
 import Video from "../models/Video.model.js";
 import JWT from "jsonwebtoken";
+import bcrypt from 'bcrypt'
 
 export const updateUser = async (req, res, next) => {
   if (req.params.id === req.user.id) {
     try {
-      const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: req.body,
-        },
-        { new: true },
-      );
+      if (req.body.img) {
+        const updatedUser = await User.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: req.body,
+          },
+          { new: true }
+        );
+
+      } else {
+        const { name, password } = req.body
+        const hashPassword = await bcrypt.hash(password, 10);
+        const updatedUser = await User.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: { name, password: hashPassword },
+          },
+          { new: true }
+        );
+      }
+
       res.status(200).json(updatedUser);
     } catch (err) {
+      console.log(err);
+
       next(err);
     }
   } else {

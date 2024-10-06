@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../verifyToken.js';
-import { addtoPlaylist, createPlaylist, deletePlaylist, getPlaylist, getPlaylistVideos, removefromPlaylist } from '../controllers/playlist.controller.js';
+import { addtoPlaylist, createPlaylist, deletePlaylist, getPlaylist, getPlaylistVideos, getPublicList, removefromPlaylist } from '../controllers/playlist.controller.js';
 
 const router = express.Router();
 
@@ -15,5 +15,7 @@ router.get("/get/:id",verifyToken,getPlaylistVideos)
 router.put("/remove",verifyToken,removefromPlaylist)
 
 router.delete("/deletelist/:id",verifyToken,deletePlaylist)
+
+router.get("/getlist/:userId",getPublicList)
 
 export default router

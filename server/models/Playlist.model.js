@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { set } from "mongoose";
 
 const PlaylistSchema = new mongoose.Schema(
     {
@@ -9,6 +9,11 @@ const PlaylistSchema = new mongoose.Schema(
         name:{
             type:String,
             required:true,
+        },
+        type:{
+            type:String,
+            required:true,
+            set:(value)=>value.toUpperCase()
         },
         playlist:{
             type:[String]

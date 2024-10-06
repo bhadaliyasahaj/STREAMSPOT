@@ -4,7 +4,8 @@ const SubscriberSchema = mongoose.Schema({
     subscribedFrom: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        unique: false
     },
     subscribedTo: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,6 +16,8 @@ const SubscriberSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     }
-},{timestamps:true})
+}, { timestamps: true })
 
-export default mongoose.model('subscriber',SubscriberSchema)
+SubscriberSchema.index({ subscribedFrom: 1, subscribedTo: 1 }, { unique: true })
+
+export default mongoose.model('subscriber', SubscriberSchema)

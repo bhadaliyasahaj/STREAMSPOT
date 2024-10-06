@@ -5,6 +5,7 @@ import {
   category,
   deleteVideo,
   getByTag,
+  getChannelVideo,
   gethistory,
   getVideo,
   myvideos,
@@ -32,5 +33,6 @@ router.get("/search", search);
 router.get("/myvideos", verifyToken, myvideos);
 router.get("/category/:cat", category);
 router.get("/history", verifyToken, gethistory);
+router.get("/channel/video/:id", getChannelVideo);
 
 export default router;

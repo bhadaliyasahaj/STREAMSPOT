@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PersonIcon from "@mui/icons-material/Person";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
 import Homeload from "./loadComponent/Homeload";
@@ -122,6 +122,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
   const [visible, setVisible] = useState(false);
   const [resp, setResp] = useState("");
   const [save, setSave] = useState(false);
+  const navigate = useNavigate()
 
 
 
@@ -131,6 +132,8 @@ const Card = ({ type, video, removed, onRemove, index }) => {
       try {
         const res = await axiosInstance.get(`/users/find/${video.userId}`);
         setChannel(res.data);
+        console.log(res.data);
+        
         setLoading(false);
         setTitle(vidtitle(video.title));
       } catch (err) {
@@ -194,6 +197,12 @@ const Card = ({ type, video, removed, onRemove, index }) => {
     setSave(true)
   }
 
+  const handleChannel = (e,id)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/channel/${id}`);
+  }
+
   return (
     <>
       {loading ? (
@@ -212,7 +221,7 @@ const Card = ({ type, video, removed, onRemove, index }) => {
             <Details type={type}>
               {type !== "sm" &&
                 (channel.img ? (
-                  <ChannelImage type={type} src={channel.img} />
+                  <ChannelImage type={type} src={channel.img} onClick={(e)=>handleChannel(e,channel._id)}/>
                 ) : (
                   <PersonIcon
                     style={{

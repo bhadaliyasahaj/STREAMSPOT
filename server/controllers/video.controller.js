@@ -168,3 +168,19 @@ export const gethistory = async (req, res, next) => {
     next(createError(404, "History Not Found"));
   }
 };
+
+export const getChannelVideo = async(req,res,next)=>{
+  try{
+    const videos = await Video.aggregate([
+      {
+        $match:{userId:req.params.id}
+      },
+      {
+        $sort:{createdAt:-1}
+      }
+    ])
+    res.status(200).json(videos)
+  }catch(err){
+    next(createError(402,"Channel Video Not Found"))
+  }
+}

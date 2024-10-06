@@ -27,7 +27,7 @@ const SkeletonElement = styled.div`
 
 // Video Wrapper skeleton with responsive design
 const SkeletonVideoWrapper = styled(SkeletonElement)`
-  width: 100%;
+  width: 70%;
   height: 500px;
 
   @media (max-width: 1024px) {
@@ -103,12 +103,12 @@ const SkeletonHr = styled.hr`
 `;
 
 const SkeletonComments = styled(SkeletonElement)`
-  width: 100%;
+  width: 70%;
   height: 100px;
 `;
 
 const SkeletonRecommendation = styled(SkeletonElement)`
-  width: 100%;
+  width: 70%;
   height: 200px;
 `;
 

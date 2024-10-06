@@ -18,6 +18,7 @@ import Notification from "./components/Notification";
 import { useDispatch } from "react-redux";
 import { setmessage } from "./redux/notificationSlice";
 import Resetpass from "./components/Resetpass";
+import Channel from "./components/Channel";
 // import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -89,6 +90,9 @@ function App() {
                     path="history"
                     element={<Category category="history" />}
                   />
+                  <Route path="channel">
+                    <Route path=":id" element={<Channel type="channel"/>}/>
+                  </Route>
                   <Route path="search" element={<Search />} />
                   <Route path="signin" element={<SignIn />} />
                   <Route path="profile" element={<Profile />} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import StreamSpot from "../img/logo.png";
+import StreamSpot from "../img/StreamSpotLogo.png";
 import Visibility from '@mui/icons-material/VisibilityOutlined'
 import VisibilityOff from '@mui/icons-material/VisibilityOffOutlined'
 import { useDispatch } from 'react-redux';

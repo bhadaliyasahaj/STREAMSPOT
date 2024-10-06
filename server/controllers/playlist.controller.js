@@ -95,3 +95,12 @@ export const deletePlaylist = async (req,res,next)=>{
         next(createError(402,"Error In Deletion Of Playlist"))
     }
 }
+
+export const getPublicList = async (req,res,next)=>{
+    try {
+        const pubList = await Playlist.find({userId:req.params.userId,type:"PUBLIC"});
+        res.status(200).json(pubList);
+    } catch (error) {
+        next(createError(403,"Error Occured While Getting Playlist"))
+    }
+}

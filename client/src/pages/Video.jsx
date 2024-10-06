@@ -116,6 +116,7 @@ const Image = styled.img`
     min-width: 40px;
     height: 40px;
   }
+  cursor: pointer;
 `;
 
 const ChannelDetail = styled.div`
@@ -211,7 +212,6 @@ const Span = styled.span`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
@@ -347,6 +347,12 @@ const Video = () => {
     }
   };
 
+  const handleChannel = (e,channelId)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/channel/${channelId}`)
+  }
+
   return (
     <>
       {channel && currentVideo ? (
@@ -396,7 +402,7 @@ const Video = () => {
             <Channel>
               <ChannelInfo>
                 {channel.img ? (
-                  <Image src={channel.img} />
+                  <Image src={channel.img} onClick={(e)=>handleChannel(e,channel._id)}/>
                 ) : (
                   <Person
                     style={{
@@ -404,7 +410,9 @@ const Video = () => {
                       height: "50px",
                       color: "gray",
                       borderRadius: "50%",
+                      cursor:"pointer"
                     }}
+                    onClick={(e)=>handleChannel(e,channel._id)}
                   />
                 )}
                 <ChannelDetail>

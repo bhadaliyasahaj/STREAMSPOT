@@ -158,7 +158,7 @@ const Playlist = () => {
         const playlist = await axiosInstance.get("/playlist/get");
         setPlaylists(playlist.data.playlists);
         setImage(playlist.data.images)
-        console.log(playlist.data);
+        // console.log(playlist.data);
 
         setLoading(false)
       } catch (err) {
@@ -172,14 +172,15 @@ const Playlist = () => {
     getPlaylists();
   }, []);
 
-  const handleRemove = async (e, id) => {
+  const handleRemove = async (e, id,index) => {
     e.stopPropagation();
     e.preventDefault();
-    // console.log(id);
+    console.log(index);
     try {
       const res = await axiosInstance.delete(`/playlist/deletelist/${id}`)
       console.log(res.data);
-      setPlaylists((prev) => prev.filter((list) => list._id !== id))
+      setPlaylists((prev) => prev.filter((list) => list._id !== id))      
+      setImage((prev)=>prev.splice(index,1));
     } catch (error) {
       console.log(error);
     }
@@ -209,7 +210,7 @@ const Playlist = () => {
                 <MoreContainer enremove={activelist === item._id}>
                   <More className="more-icon" onClick={(e) => handleMore(e, item._id)} style={{ bottom: "10px" }} />
                   <div className="delete-option">
-                    <List onClick={(e) => handleRemove(e, item._id)}>Remove</List>
+                    <List onClick={(e) => handleRemove(e, item._id,index)}>Remove</List>
                   </div>
                 </MoreContainer>
                 <Details>
@@ -217,6 +218,9 @@ const Playlist = () => {
                     <Title>{item.name.toUpperCase()}</Title>
                     <Info>
                       Updated {format(item.updatedAt)}
+                    </Info>
+                    <Info>
+                      {item.type}
                     </Info>
                   </Texts>
                 </Details>

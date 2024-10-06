@@ -17,7 +17,7 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link, useLocation } from "react-router-dom";
-import StreamSpot from "../img/logo.png";
+import StreamSpot from "../img/StreamSpotLogo.png";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -156,8 +156,8 @@ const Menu = ({ darkMode, setDarkMode }) => {
           }}
         >
           <Logo>
-            <Img src={StreamSpot} />
-            <Text>StreamSpot</Text>
+            <Img src={StreamSpot} style={{minWidth:"30px",minHeight:"30px"}}/>
+            <Text style={{fontSize:"17px"}}>StreamSpot</Text>
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>

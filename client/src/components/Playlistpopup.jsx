@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axiosInstance from "../utils/axiosInstance.js";
 import { useDispatch } from "react-redux";
 import { setmessage } from "../redux/notificationSlice.js";
-import Loader from 'react-spinners/PropagateLoader.js'
+import Loader from "react-spinners/PropagateLoader.js";
 
 const PlaylistPopup = styled.div`
   position: fixed;
@@ -52,10 +52,13 @@ const PlaylistList = styled.ul`
 const PlaylistItem = styled.li`
   padding: 10px;
   margin-bottom: 10px;
-  background-color: ${({ theme, active }) => (active ? "#3a9a3d" : theme.bg)};
+  background-color: ${({ theme, active }) => (active ? "#4d7a4f" : theme.bg)};
   color: ${({ theme }) => theme.text};
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   /* width: 100%; */
 `;
 
@@ -66,6 +69,7 @@ const CreatePlaylistInput = styled.input`
   margin-bottom: 10px;
   background-color: ${({ theme }) => theme.bg};
   color: ${({ theme }) => theme.text};
+  flex: 2;
 `;
 
 const Button = styled.button`
@@ -94,15 +98,42 @@ const Close = styled.button`
 `;
 
 const Notice = styled.p`
-  padding:0 20px;
+  padding: 0 20px;
   color: ${({ theme }) => theme.textSoft};
+`;
+
+const CreatePlaylistContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 20px;
+`;
+
+const TypeButton = styled.button`
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: ${({ theme }) => theme.bg};
+  color: ${({ theme }) => theme.text};
+  box-shadow: 2px 2px 2px 1px #00000023;
+  cursor: pointer;
+`;
+
+const PlaylistContainer = styled.p`
+  font-size: 0.9rem;
+`;
+
+const PlaylistType = styled.p`
+  font-size: 0.8rem;
+  color: ${({theme})=>theme.textSoft};
 `;
 
 function Playlistpopup({ setSave, vidId }) {
   const [playlists, setPlaylists] = useState(null);
   const [newPlaylist, setNewPlaylist] = useState("");
   const [active, setActive] = useState([]);
-  const dispatch = useDispatch()
+  const [plytype, setplyType] = useState("PUBLIC");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getPlaylists = async () => {
@@ -122,15 +153,16 @@ function Playlistpopup({ setSave, vidId }) {
       if (active.length > 0) {
         const res = await axiosInstance.put(`/playlist/add/${vidId}`, active);
         console.log(res);
-        dispatch(setmessage("Playlist Updated"))
+        dispatch(setmessage("Playlist Updated"));
         setSave(false);
-      } else {
+      } else if (plytype) {
         const res = await axiosInstance.post("/playlist/create", {
           name: newPlaylist,
+          type: plytype
         });
         console.log(res);
         setNewPlaylist("");
-        dispatch(setmessage("Playlist Created"))
+        dispatch(setmessage("Playlist Created"));
       }
     } catch (err) {
       console.log(err);
@@ -145,30 +177,52 @@ function Playlistpopup({ setSave, vidId }) {
     }
   };
 
+  const handlePlaylistType = () => {
+    if (plytype === "PRIVATE") {
+      setplyType("PUBLIC");
+    } else if (plytype === "PUBLIC") {
+      setplyType("PRIVATE");
+    }
+  };
+
   return (
     <PlaylistPopup>
       <CenterBox>
         <Close onClick={() => setSave(false)}>X</Close>
         <Title>Select or Create Playlist</Title>
         <PlaylistList>
-          {playlists ? (playlists.length > 0 ?
-            playlists.map((playlist, index) => (
-              <PlaylistItem
-                key={index}
-                onClick={() => handleSelection(playlist._id)}
-                active={active.includes(playlist._id)}
-              >
-                {playlist.name}
-              </PlaylistItem>
-            )) : (<Notice>No Playlists Yet</Notice>)) : (<Loader color="red" style={{alignSelf:"center",margin:"20px 0px"}}/>)}
+          {playlists ? (
+            playlists.length > 0 ? (
+              playlists.map((playlist, index) => (
+                <PlaylistItem key={index}
+                  onClick={() => handleSelection(playlist._id)}
+                  active={active.includes(playlist._id)}>
+                  <PlaylistContainer>
+                    {playlist.name}
+                  </PlaylistContainer>
+                  <PlaylistType>{playlist.type}</PlaylistType>
+                </PlaylistItem>
+              ))
+            ) : (
+              <Notice>No Playlists Yet</Notice>
+            )
+          ) : (
+            <Loader
+              color="red"
+              style={{ alignSelf: "center", margin: "20px 0px" }}
+            />
+          )}
         </PlaylistList>
-        <CreatePlaylistInput
-          type="text"
-          placeholder="Create new playlist"
-          value={newPlaylist}
-          onChange={(e) => setNewPlaylist(e.target.value)}
-          onFocus={() => setActive([])}
-        />
+        <CreatePlaylistContainer>
+          <CreatePlaylistInput
+            type="text"
+            placeholder="Create new playlist"
+            value={newPlaylist}
+            onChange={(e) => setNewPlaylist(e.target.value)}
+            onFocus={() => setActive([])}
+          />
+          <TypeButton onClick={handlePlaylistType} title={`Port To ${plytype === "PRIVATE" ? "Public" : "Private"}`}>{plytype}</TypeButton>
+        </CreatePlaylistContainer>
         <Button onClick={handleCreatePlaylist}>
           {active.length > 0 ? "Add To Playlist" : "Create Playlist"}
         </Button>
