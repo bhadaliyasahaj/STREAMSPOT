@@ -15,20 +15,35 @@ export const createPlaylist = async (req, res, next) => {
 
 export const getPlaylist = async (req, res, next) => {
     try {
-        const playlists = await Playlist.find({ userId: req.user.id })
-        const images = await Promise.all(
-            playlists.map(async (list) => {
-                try {
-                    let video = await Video.findById(list.playlist[0])
-                    return (video.imgUrl)
-                } catch (err) {
-                    console.log(err);
-                    return ""
+        const playlists = await Playlist.aggregate([
+            {
+                $match:{userId:req.user.id}
+            },
+            {
+                $lookup:{
+                    from:'videos',
+                    localField:'playlist',
+                    foreignField:'_id',
+                    as:'videos'
                 }
-            })
-        )
-        console.log(images);
-        res.status(200).json({ playlists, images })
+            },
+            {
+                $addFields:{
+                    Image:{$arrayElemAt:['$videos.imgUrl',0]}
+                }
+            },
+            {
+                $project:{
+                    userId:1,
+                    name: 1,
+                    type: 1,
+                    playlist: 1, 
+                    Image: 1
+                }
+            }
+        ])
+        
+        res.status(200).json( playlists )
     } catch (error) {
         next(createError(404, "Some Error Occurred While Getting Playlist"))
     }
@@ -75,7 +90,7 @@ export const removefromPlaylist = async (req, res, next) => {
     try {
         const vidid = req.body.vidid;
         const playlistid = req.body.plid;
-        console.log(vidid, playlistid);
+        // console.log(vidid, playlistid);
 
         const updatedPlaylist = await Playlist.findByIdAndUpdate(playlistid, {
             $pull: { playlist: vidid }
@@ -98,7 +113,35 @@ export const deletePlaylist = async (req,res,next)=>{
 
 export const getPublicList = async (req,res,next)=>{
     try {
-        const pubList = await Playlist.find({userId:req.params.userId,type:"PUBLIC"});
+        const pubList = await Playlist.aggregate([
+            {
+                $match:{userId:req.params.userId,type:"PUBLIC"}
+            },
+            {
+                $lookup:{
+                    from:'videos',
+                    localField:'playlist',
+                    foreignField:'_id',
+                    as:'videos'
+                }
+            },
+            {
+                $addFields:{
+                    Image:{$arrayElemAt:['$videos.imgUrl',0]}
+                }
+            },
+            {
+                $project:{
+                    userId:1,
+                    name: 1,
+                    type: 1,
+                    playlist: 1, 
+                    Image: 1
+                }
+            }
+        ])
+        console.log(pubList);
+        
         res.status(200).json(pubList);
     } catch (error) {
         next(createError(403,"Error Occured While Getting Playlist"))

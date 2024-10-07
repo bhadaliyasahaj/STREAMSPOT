@@ -7,6 +7,8 @@ import axiosInstance from "../utils/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { subscription } from "../redux/userSlice";
 import Card from "./Card";
+import Playlist from "./Playlists";
+import nProgress from "nprogress";
 
 const Container = styled.div`
   color: ${({ theme }) => theme.text};
@@ -132,7 +134,6 @@ function Channel({ type }) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [videos, setVideos] = useState([]);
-  const [playlist, setPlaylist] = useState(null);
   const [videoType, setVideoType] = useState("latest");
 
   useEffect(() => {
@@ -142,12 +143,11 @@ function Channel({ type }) {
         const res = await axiosInstance(`/users/find/${channelId}`);
         setChannel(res.data)
         if (active === "video") {
+          nProgress.start()
           const chvideos = await axiosInstance(`/videos/channel/video/${res.data._id}`);
-          // console.log(chvideos.data);
+          console.log(chvideos.data);
           setVideos(chvideos.data)
-        } else if (active === "playlist") {
-          const chplaylist = await axiosInstance(`/playlist/getlist/${res.data._id}`);
-          setPlaylist(chplaylist.data);
+          nProgress.done()
         }
         // console.log(res.data);
       } catch (err) {
@@ -225,7 +225,7 @@ function Channel({ type }) {
                 <ChannelInfo>@{channel.name}</ChannelInfo>
                 <ChannelInfo>{channel.subscribers} subscribers</ChannelInfo>
                 <ChannelInfo>Description</ChannelInfo>
-                <Subscribe onClick={handleSubscription} disabled={event === "sub"} subscribed={currentUser.subscribedUsers?.includes(channel._id)}>
+                <Subscribe onClick={handleSubscription} disabled={event === "sub"} subscribed={currentUser?.subscribedUsers?.includes(channel._id)}>
                   {(currentUser &&
                     currentUser.subscribedUsers?.includes(channel._id)
                     ? "SUBSCRIBED"
@@ -261,14 +261,10 @@ function Channel({ type }) {
                   )) : <p>Videos Are Not Available</p>
                 }
               </VideoContainer>
-              <PlaylistContainer>
-                {/* {
-                  playlist ? playlist.map((ply)=>(
-
-                  )):<p>Playlist Not Found</p>
-                } */}
-              </PlaylistContainer>
             </>}
+            {active === "playlist" && <PlaylistContainer>
+              <Playlist pubList={channel}></Playlist>
+            </PlaylistContainer>}
           </ChannelContent>
         </Wrapper>
       </Container>

@@ -143,7 +143,7 @@ const List = styled.li`
       border-radius: 1.5px;
 `
 
-const Playlist = () => {
+const Playlist = ({ pubList }) => {
   const [loading, setLoading] = useState(false);
   const [playlists, setPlaylists] = useState(null);
   const [image, setImage] = useState([]);
@@ -155,32 +155,36 @@ const Playlist = () => {
     const getPlaylists = async () => {
       setLoading(true)
       try {
-        const playlist = await axiosInstance.get("/playlist/get");
-        setPlaylists(playlist.data.playlists);
-        setImage(playlist.data.images)
-        // console.log(playlist.data);
+        if (!pubList) {
+          const playlist = await axiosInstance.get("/playlist/get");
+          setPlaylists(playlist.data);
+          // setImage(playlist.data.images)
+          // console.log(playlist.data);
 
-        setLoading(false)
+        } else {
+          const chplaylist = await axiosInstance(`/playlist/getlist/${pubList._id}`);
+          console.log(chplaylist.data);
+
+          setPlaylists(chplaylist.data);
+        }
       } catch (err) {
         console.log(err);
+      } finally {
         setLoading(false)
       }
-      finally {
-        nProgress.done()
-      }
     };
-    getPlaylists();
-  }, []);
+    getPlaylists()
+    nProgress.done()
+  }, [pubList]);
 
-  const handleRemove = async (e, id,index) => {
+  const handleRemove = async (e, id, index) => {
     e.stopPropagation();
     e.preventDefault();
     console.log(index);
     try {
       const res = await axiosInstance.delete(`/playlist/deletelist/${id}`)
-      console.log(res.data);
-      setPlaylists((prev) => prev.filter((list) => list._id !== id))      
-      setImage((prev)=>prev.splice(index,1));
+      // console.log(res.data);
+      setPlaylists((prev) => prev.filter((list) => list._id !== id))
     } catch (error) {
       console.log(error);
     }
@@ -199,18 +203,18 @@ const Playlist = () => {
   return (
     <>
       <PlaylistsContainer>
-        {playlists && (playlists.length > 0 ? (playlists.map((item, index) => (
+        {playlists ? (playlists.length > 0 ? (playlists.map((item, index) => (
           loading ? (<Playlistload />) : (
             <Link to={`/playlist/${item._id}`} style={{ textDecoration: "none" }} key={item._id}>
               <Container>
                 <ImageContainer>
                   <PlaylistPlay style={{ position: "absolute", fontSize: "50px", color: "white" }} />
-                  <Image src={image[index]} />
+                  <Image src={item.Image} />
                 </ImageContainer>
                 <MoreContainer enremove={activelist === item._id}>
                   <More className="more-icon" onClick={(e) => handleMore(e, item._id)} style={{ bottom: "10px" }} />
                   <div className="delete-option">
-                    <List onClick={(e) => handleRemove(e, item._id,index)}>Remove</List>
+                    <List onClick={(e) => handleRemove(e, item._id, index)}>Remove</List>
                   </div>
                 </MoreContainer>
                 <Details>
@@ -226,7 +230,7 @@ const Playlist = () => {
                 </Details>
               </Container>
             </Link>)
-        ))) : (<Noticepara>No Playlist Found</Noticepara>))}
+        ))) : (<Noticepara>No Playlist Found</Noticepara>)):(<Noticepara>No Playlist Found</Noticepara>)}
       </PlaylistsContainer>
     </>
   );

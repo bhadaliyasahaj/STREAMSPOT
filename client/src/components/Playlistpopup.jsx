@@ -139,8 +139,8 @@ function Playlistpopup({ setSave, vidId }) {
     const getPlaylists = async () => {
       try {
         const res = await axiosInstance.get("/playlist/get");
-        console.log(res.data);
-        setPlaylists(res.data.playlists);
+        // console.log(res.data);
+        setPlaylists(res.data);
       } catch (err) {
         console.log(err);
       }
