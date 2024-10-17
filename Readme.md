@@ -78,8 +78,7 @@ A full-featured video streaming platform built with the **MERN stack**. It allow
 ## 🐛 Future Improvements  
 - Fix minor glitches for smoother performance.  
 - Add **notifications** and **video sharing** features.  
-- Improve **channel management tools**.  
-- Open to feedback and suggestions—please drop a comment!  
+- Improve **channel management tools**.   
 
 ---
 
@@ -90,9 +89,5 @@ A full-featured video streaming platform built with the **MERN stack**. It allow
 
 ---
 
-## 📃 License  
-This project is licensed under the **MIT License**.  
-
----
 
 Let me know if further adjustments are needed!
