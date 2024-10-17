@@ -1,4 +1,3 @@
-Here’s the **default README** content for your **Stream Spot** project:  
 
 ---
 
